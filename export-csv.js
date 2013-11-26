@@ -21,7 +21,7 @@
             columns[0].unshift("");
         }
         each (this.series, function (series) {
-            columns.push(series.yData);
+            columns.push(series.yData.slice());
             columns[columns.length - 1].unshift(series.name);
         });
         
