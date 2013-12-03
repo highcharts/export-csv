@@ -62,7 +62,7 @@
     // https://raw.github.com/highslide-software/highcharts.com/master/studies/csv-export/csv.php
     if (Highcharts.getOptions().exporting) {
         Highcharts.getOptions().exporting.buttons.contextButton.menuItems.push({
-            text: 'Download CSV',
+            text: Highcharts.getOptions().lang.downloadCSV || "Download CSV",
             onclick: function () {
                 Highcharts.post('http://www.highcharts.com/studies/csv-export/csv.php', {
                     csv: this.getCSV()
