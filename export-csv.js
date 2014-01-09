@@ -5,6 +5,7 @@
     
     
     var each = Highcharts.each;
+    var filename;
     Highcharts.Chart.prototype.getCSV = function () {
         var columns = [],
             line,
@@ -18,6 +19,8 @@
             dateFormat = options.dateFormat || '%Y-%m-%d %H:%M:%S',
             itemDelimiter = options.itemDelimiter || ',', // use ';' for direct import to Excel
             lineDelimiter = options.lineDelimeter || '\n';
+
+        filename = this.title.text;
 
         each (this.series, function (series) {
             if (series.options.includeInCSVExport !== false) {
@@ -67,7 +70,8 @@
             text: Highcharts.getOptions().lang.downloadCSV || "Download CSV",
             onclick: function () {
                 Highcharts.post('http://www.highcharts.com/studies/csv-export/csv.php', {
-                    csv: this.getCSV()
+                    csv: this.getCSV(),
+                    filename: filename
                 });
             }
         });
