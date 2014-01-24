@@ -39,7 +39,7 @@
                         });
                         xTitle = 'Category';
                     }
-                    if (series.xAxis.axisTitle.text)
+                    if (series.xAxis.axisTitle && series.xAxis.axisTitle.text)
                         xTitle = series.xAxis.axisTitle.text;
                     columns.push(xData);
                     columns[columns.length - 1].unshift(xTitle);
