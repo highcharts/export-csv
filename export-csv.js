@@ -17,7 +17,7 @@
             // Options
             dateFormat = options.dateFormat || '%Y-%m-%d %H:%M:%S',
             itemDelimiter = options.itemDelimiter || ',', // use ';' for direct import to Excel
-            lineDelimiter = options.lineDelimeter || '\n';
+            lineDelimiter = options.lineDelimeter || "%0A";
 
         each (this.series, function (series) {
             if (series.options.includeInCSVExport !== false) {
@@ -55,18 +55,19 @@
         return csv;
     };
 
-    // Now we want to add "Download CSV" to the exporting menu. We post the CSV
-    // to a simple PHP script that returns it with a content-type header as a 
-    // downloadable file.
-    // The source code for the PHP script can be viewed at 
-    // https://raw.github.com/highslide-software/highcharts.com/master/studies/csv-export/csv.php
+    // Now we want to add "Download CSV" to the exporting menu.
     if (Highcharts.getOptions().exporting) {
         Highcharts.getOptions().exporting.buttons.contextButton.menuItems.push({
             text: Highcharts.getOptions().lang.downloadCSV || "Download CSV",
             onclick: function () {
-                Highcharts.post('http://www.highcharts.com/studies/csv-export/csv.php', {
-                    csv: this.getCSV()
-                });
+                // http://stackoverflow.com/questions/17836273/export-javascript-data-to-csv-file-without-server-interaction
+                var a         = document.createElement('a');
+                a.href        = 'data:attachment/csv,' + this.getCSV();
+                a.target      = '_blank';
+                a.download    = this.title.text + '.csv';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
             }
         });
     }
