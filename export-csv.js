@@ -26,7 +26,7 @@
                         xTitle = 'X values';
                     if (series.xAxis.isDatetimeAxis) {
                         xData = Highcharts.map(xData, function (x) {
-                            return Highcharts.dateFormat(dateFormat, x)
+                            return Highcharts.dateFormat(dateFormat, x);
                         });
                         xTitle = 'DateTime';
                     } else if (series.xAxis.categories) {
