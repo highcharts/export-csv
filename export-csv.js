@@ -1,5 +1,5 @@
 /**
- * A small plugin for getting the CSV of a categorized chart v 1.0.3
+ * A small plugin for getting the CSV of a categorized chart v 1.1
  * https://github.com/highslide-software/export-csv
  * http://www.highcharts.com/plugin-registry/single/7/Export-CSV
  */
