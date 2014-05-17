@@ -7,13 +7,12 @@
     var each = Highcharts.each;
     Highcharts.Chart.prototype.getCSV = function () {
         var columns = [],
-            line,
-            tempLine,
+            line,            
             csv = "", 
             row,
             col,
             options = (this.options.exporting || {}).csv || {},
-
+            maxRows=0,
             // Options
             dateFormat = options.dateFormat || '%Y-%m-%d %H:%M:%S',
             itemDelimiter = options.itemDelimiter || ',', // use ';' for direct import to Excel
@@ -40,11 +39,14 @@
                 }
                 columns.push(series.yData.slice());
                 columns[columns.length - 1].unshift(series.name);
+                if (series.data.length>maxRows){
+        			maxRows=series.data.length;
+        		}
             }
         });
 
-        // Transform the columns to CSV
-        for (row = 0; row < columns[0].length; row++) {
+     // Transform the columns to CSV
+        for (row = 0; row < maxRows; row++) {
             line = [];
             for (col = 0; col < columns.length; col++) {
                 line.push(columns[col][row]);
