@@ -61,13 +61,22 @@
             text: Highcharts.getOptions().lang.downloadCSV || "Download CSV",
             onclick: function () {
                 // http://stackoverflow.com/questions/17836273/export-javascript-data-to-csv-file-without-server-interaction
-                var a         = document.createElement('a');
-                a.href        = 'data:attachment/csv,' + this.getCSV();
-                a.target      = '_blank';
-                a.download    = this.title.text + '.csv';
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
+                var title = ((this.title || {}).text || 'chart') + '.csv',
+                    a = document.createElement('a');
+
+                if ("download" in a) { // modern browser - no need to use backend script
+                    a.href = 'data:attachment/csv,' + encodeURIComponent(csv);
+                    a.target = '_blank';
+                    a.download = title;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                } else {
+                    Highcharts.post(url, {
+                        csv: csv,
+                        title: title
+                    });
+                }
             }
         });
     }
