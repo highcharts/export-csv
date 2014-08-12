@@ -12,6 +12,7 @@
             csv = "", 
             row,
             col,
+            maxRows,
             options = (this.options.exporting || {}).csv || {},
 
             // Options
@@ -43,8 +44,15 @@
             }
         });
 
+        // Native map implementation is significantly faster than jQuery implementation
+        if (Array.prototype.map) {
+            maxRows = Math.max.apply(this, columns.map(function (el) { return el.length; }));
+        } else {
+            maxRows = Math.max.apply(this, $.map(columns, function (el) { return el.length; }));
+        }
+
         // Transform the columns to CSV
-        for (row = 0; row < columns[0].length; row++) {
+        for (row = 0; row < maxRows; row++) {
             line = [];
             for (col = 0; col < columns.length; col++) {
                 line.push(columns[col][row]);
