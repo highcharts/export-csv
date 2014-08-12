@@ -12,6 +12,7 @@
             csv = "", 
             row,
             col,
+            maxRows,
             options = (this.options.exporting || {}).csv || {},
 
             // Options
@@ -44,7 +45,8 @@
         });
 
         // Transform the columns to CSV
-        for (row = 0; row < columns[0].length; row++) {
+        maxRows = Math.max.apply(this, Highcharts.map(columns, function (col) { return col.length; }));
+        for (row = 0; row < maxRows; row++) {
             line = [];
             for (col = 0; col < columns.length; col++) {
                 line.push(columns[col][row]);
