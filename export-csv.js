@@ -17,7 +17,7 @@
             // Options
             dateFormat = options.dateFormat || '%Y-%m-%d %H:%M:%S',
             itemDelimiter = options.itemDelimiter || ',', // use ';' for direct import to Excel
-            lineDelimiter = options.lineDelimeter || "%0A";
+            lineDelimiter = options.lineDelimiter || '\n';
 
         each (this.series, function (series) {
             if (series.options.includeInCSVExport !== false) {
