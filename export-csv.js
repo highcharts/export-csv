@@ -57,18 +57,42 @@
         return csv;
     };
 
-    // Now we want to add "Download CSV" to the exporting menu. We post the CSV
-    // to a simple PHP script that returns it with a content-type header as a 
-    // downloadable file.
-    // The source code for the PHP script can be viewed at 
+    // Now we want to add "Download CSV" to the exporting menu.
+    // If supported by the browser we use the download attribute
+    // on an anchor element to tell the browser to return the url
+    // data as a downloadable file.
+    // If the download attribute is not supported we post the CSV
+    // to a simple PHP script that returns it with a content-type
+    // header as a downloadable file.
+    // The source code for the PHP script can be viewed at
     // https://raw.github.com/highslide-software/highcharts.com/master/studies/csv-export/csv.php
     if (Highcharts.getOptions().exporting) {
         Highcharts.getOptions().exporting.buttons.contextButton.menuItems.push({
             text: Highcharts.getOptions().lang.downloadCSV || "Download CSV",
             onclick: function () {
-                Highcharts.post('http://www.highcharts.com/studies/csv-export/csv.php', {
-                    csv: this.getCSV()
-                });
+                var title = (this.options.title || {}).text,
+                    exportingCsvOptions = (this.options.exporting || {}).csv || {};
+
+                var url = exportingCsvOptions.url || 'http://www.highcharts.com/studies/csv-export/csv.php';
+                var csv = this.getCSV();
+
+                // http://stackoverflow.com/questions/17836273/export-javascript-data-to-csv-file-without-server-interaction
+                var filename = (title || 'chart') + '.csv',
+                    a = document.createElement('a');
+
+                if ("download" in a) { // modern browser - no need to use backend script
+                    a.href = 'data:text/csv;charset=UTF-8,' + encodeURIComponent(csv);
+                    a.target = '_blank';
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                } else {
+                    Highcharts.post(url, {
+                        csv: csv,
+                        filename: filename
+                    });
+                }
             }
         });
     }
