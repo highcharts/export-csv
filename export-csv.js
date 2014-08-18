@@ -70,6 +70,8 @@
         Highcharts.getOptions().exporting.buttons.contextButton.menuItems.push({
             text: Highcharts.getOptions().lang.downloadCSV || "Download CSV",
             onclick: function () {
+                var csv = this.getCSV();
+
                 // http://stackoverflow.com/questions/17836273/export-javascript-data-to-csv-file-without-server-interaction
                 var title = ((this.title || {}).text || 'chart') + '.csv',
                     a = document.createElement('a');
@@ -83,7 +85,7 @@
                     a.remove();
                 } else {
                     Highcharts.post('http://www.highcharts.com/studies/csv-export/csv.php', {
-                        csv: this.getCSV(),
+                        csv: csv,
                         title: title
                     });
                 }
