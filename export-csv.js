@@ -18,7 +18,7 @@
             // Options
             dateFormat = options.dateFormat || '%Y-%m-%d %H:%M:%S',
             itemDelimiter = options.itemDelimiter || ',', // use ';' for direct import to Excel
-            lineDelimiter = options.lineDelimiter || '\n';
+            lineDelimiter = options.lineDelimiter || "%0A"; // '\n' isn't working with the js csv data extraction
 
         each (this.series, function (series) {
             if (series.options.includeInCSVExport !== false) {
@@ -62,13 +62,20 @@
     // downloadable file.
     // The source code for the PHP script can be viewed at 
     // https://raw.github.com/highslide-software/highcharts.com/master/studies/csv-export/csv.php
+    // Instead of the php script on server side we get the csv info on client side
+    // original code  from 
+    // http://stackoverflow.com/questions/17836273/export-javascript-data-to-csv-file-without-server-interaction
     if (Highcharts.getOptions().exporting) {
         Highcharts.getOptions().exporting.buttons.contextButton.menuItems.push({
             text: Highcharts.getOptions().lang.downloadCSV || "Download CSV",
             onclick: function () {
-                Highcharts.post('http://www.highcharts.com/studies/csv-export/csv.php', {
-                    csv: this.getCSV()
-                });
+     			var a         = document.createElement('a');
+    			a.href        = 'data:attachment/csv,' + this.getCSV();
+    			a.target      = '_blank';
+    			a.download    = this.title.text + '.csv';
+    			document.body.appendChild(a);
+    			a.click();
+    			a.remove();
             }
         });
     }
