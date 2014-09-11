@@ -72,7 +72,11 @@
      			var a         = document.createElement('a');
     			a.href        = 'data:attachment/csv,' + this.getCSV();
     			a.target      = '_blank';
-    			a.download    = this.title.text + '.csv';
+    			var fileName='savedChart';
+    			if (this.title){
+    				fileName= this.title.textStr.replace(/ /g ,'_') 
+    			}
+    			a.download    = fileName + '.csv';
     			document.body.appendChild(a);
     			a.click();
     			a.remove();
