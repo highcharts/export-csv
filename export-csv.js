@@ -1,5 +1,5 @@
 /**
- * A small plugin for getting the CSV of a categorized chart
+ * A small plugin for getting the CSV of a rendered chart
  */
 /*global Highcharts, document */
 (function (Highcharts) {
@@ -22,7 +22,7 @@
             // Options
             dateFormat = options.dateFormat || '%Y-%m-%d %H:%M:%S',
             itemDelimiter = options.itemDelimiter || ';', // use ';' for direct import to Excel
-            lineDelimiter = (downloadAttrSupported ? options.lineDelimiter || '%0A' : options.lineDelimiter || '\n\r'); // '\n' isn't working with the js csv data extraction
+            lineDelimiter = options.lineDelimiter || '\n'; // '\n' isn't working with the js csv data extraction
 
 
         each(this.series, function (series) {
@@ -75,7 +75,7 @@
                 if (downloadAttrSupported) {
                     // Client side extraction
                     a = document.createElement('a');
-                    a.href        = 'data:attachment/csv,' + this.getCSV();
+                    a.href        = 'data:attachment/csv,' + this.getCSV().replace(/\n/g, '%0A');
                     a.target      = '_blank';
                     a.download    = (this.title ? this.title.textStr.replace(/ /g, '-').toLowerCase() : 'chart') + '.csv';
                     document.body.appendChild(a);
