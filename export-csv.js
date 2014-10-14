@@ -41,11 +41,14 @@
                         });
                         xTitle = 'Category';
                     }
-                    columns.push(xData);
-                    columns[columns.length - 1].unshift(xTitle);
-                }
-                columns.push(series.yData.slice());
-                columns[columns.length - 1].unshift(series.name);
+					xData.forEach(function(part, index, theArray) {
+						theArray[index] = '"'+theArray[index]+'"';
+					});
+					columns.push(xData);
+					columns[columns.length - 1].unshift('"'+xTitle+'"');
+				}
+				columns.push(series.yData.slice());
+				columns[columns.length - 1].unshift('"'+series.name+'"');
             }
         });
 
