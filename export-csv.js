@@ -55,6 +55,9 @@
             line = [];
             for (col = 0; col < columns.length; col = col + 1) {
                 line.push(columns[col][row]);
+                // Export Category column only once
+				if (col % 2 == 1)
+					col++;                
             }
             csv += line.join(itemDelimiter) + lineDelimiter;
         }
