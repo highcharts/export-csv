@@ -22,7 +22,8 @@
             // Options
             dateFormat = options.dateFormat || '%Y-%m-%d %H:%M:%S',
             itemDelimiter = options.itemDelimiter || ';', // use ';' for direct import to Excel
-            lineDelimiter = options.lineDelimiter || '\n'; // '\n' isn't working with the js csv data extraction
+            lineDelimiter = options.lineDelimiter || '\n', // '\n' isn't working with the js csv data extraction
+            decPoint = eval(0.1).toLocaleString()[1];
 
 
         each(this.series, function (series) {
@@ -44,7 +45,11 @@
                     columns.push(xData);
                     columns[columns.length - 1].unshift(xTitle);
                 }
-                columns.push(series.yData.slice());
+                var yData = series.yData.slice();
+				yData.forEach(function(part, index, theArray) {
+					theArray[index] = theArray[index].toString().replace('.', decPoint);
+				});
+				columns.push(yData);
                 columns[columns.length - 1].unshift(series.name);
             }
         });
