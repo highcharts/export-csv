@@ -1,0 +1,34 @@
+From e0c6790603a1d49bb42e1e036c822fd59a07f9b7 Mon Sep 17 00:00:00 2001
+From: IKAR0S <IKAR0S@users.noreply.github.com>
+Date: Tue, 14 Oct 2014 12:39:55 +0100
+Subject: [PATCH] Preserve spaces
+
+This change will preserve the spaces on series names, like "Week 05 of 2014" . Tested on several browsers.
+---
+ export-csv.js | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/export-csv.js b/export-csv.js
+index a98cdc4..8e2e5cd 100644
+--- a/export-csv.js
++++ b/export-csv.js
+@@ -41,11 +41,14 @@
+                         });
+                         xTitle = 'Category';
+                     }
+-                    columns.push(xData);
+-                    columns[columns.length - 1].unshift(xTitle);
+-                }
+-                columns.push(series.yData.slice());
+-                columns[columns.length - 1].unshift(series.name);
++					xData.forEach(function(part, index, theArray) {
++						theArray[index] = '"'+theArray[index]+'"';
++					});
++					columns.push(xData);
++					columns[columns.length - 1].unshift('"'+xTitle+'"');
++				}
++				columns.push(series.yData.slice());
++				columns[columns.length - 1].unshift('"'+series.name+'"');
+             }
+         });
+ 

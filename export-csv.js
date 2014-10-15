@@ -56,7 +56,10 @@
             for (col = 0; col < columns.length; col = col + 1) {
                 line.push(columns[col][row]);
             }
-            csv += line.join(itemDelimiter) + lineDelimiter;
+            csv += line.join(itemDelimiter);
+            if (row < maxRows - 1) {
+                csv += lineDelimiter;
+            }
         }
 
         return csv;
