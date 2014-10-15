@@ -8,6 +8,7 @@ This plugin is published under the MIT license, and the license document is incl
 ### Demos
 * [Categorized chart](http://jsfiddle.net/highcharts/cqjvD/)
 * [Highstock with time axis](http://jsfiddle.net/highcharts/2Jyn5/)
+* [Unit tests](http://jsfiddle.net/highcharts/pspdp2de/)
 
 ### Options
 * `exporting.csv.dateFormat`
