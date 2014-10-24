@@ -35,6 +35,12 @@
                         rows[point.x] = [];
                     }
                     rows[point.x].x = point.x;
+
+                    // Pies, funnels etc. use point name in X row
+                    if (!series.xAxis) {
+                        rows[point.x].name = point.name;
+                    }
+
                     rows[point.x][i] = point.y;
                 });
                 i += 1;
@@ -43,7 +49,7 @@
 
         // Make a sortable array
         for (x in rows) {
-            if (rows.hasOwnProperty('x')) {
+            if (rows.hasOwnProperty(x)) {
                 rowArr.push(rows[x]);
             }
         }
@@ -53,14 +59,14 @@
         });
 
         // Add header row
-        csv = (xAxis.isDatetimeAxis ? 'DateTime' : xAxis.categories ? 'Category' : 'X values') + itemDelimiter +
+        csv = (xAxis.isDatetimeAxis ? 'DateTime' : 'Category') + itemDelimiter +
             names.join(itemDelimiter) + lineDelimiter;
 
         // Transform the rows to CSV
         each(rowArr, function (row, i) {
 
             // Add the X/date/category
-            csv += xAxis.isDatetimeAxis ? Highcharts.dateFormat(dateFormat, row.x) : xAxis.categories ? Highcharts.pick(xAxis.categories[row.x], row.x) : row.x;
+            csv += row.name || (xAxis.isDatetimeAxis ? Highcharts.dateFormat(dateFormat, row.x) : xAxis.categories ? Highcharts.pick(xAxis.categories[row.x], row.x) : row.x);
             csv += itemDelimiter;
 
             // Add the values
