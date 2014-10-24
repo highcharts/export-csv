@@ -11,56 +11,66 @@
 
 
     Highcharts.Chart.prototype.getCSV = function () {
-        var columns = [],
-            line,
-            csv = '',
-            row,
-            col,
-            maxRows,
+        var csv,
             options = (this.options.exporting || {}).csv || {},
+            xAxis = this.xAxis[0],
+            rows = {},
+            rowArr = [],
+            names = [],
+            i,
+            x,
 
             // Options
             dateFormat = options.dateFormat || '%Y-%m-%d %H:%M:%S',
             itemDelimiter = options.itemDelimiter || ';', // use ';' for direct import to Excel
             lineDelimiter = options.lineDelimiter || '\n'; // '\n' isn't working with the js csv data extraction
 
-
+        // Loop the series and index values
+        i = 0;
         each(this.series, function (series) {
             if (series.options.includeInCSVExport !== false) {
-                if (series.xAxis) {
-                    var xData = series.xData.slice(),
-                        xTitle = 'X values';
-                    if (series.xAxis.isDatetimeAxis) {
-                        xData = Highcharts.map(xData, function (x) {
-                            return Highcharts.dateFormat(dateFormat, x);
-                        });
-                        xTitle = 'DateTime';
-                    } else if (series.xAxis.categories) {
-                        xData = Highcharts.map(xData, function (x) {
-                            return Highcharts.pick(series.xAxis.categories[x], x);
-                        });
-                        xTitle = 'Category';
+                names.push(series.name);
+                each(series.points, function (point) {
+                    if (!rows[point.x]) {
+                        rows[point.x] = [];
                     }
-                    columns.push(xData);
-                    columns[columns.length - 1].unshift(xTitle);
-                }
-                columns.push(series.yData.slice());
-                columns[columns.length - 1].unshift(series.name);
+                    rows[point.x].x = point.x;
+                    rows[point.x][i] = point.y;
+                });
+                i += 1;
             }
         });
 
-        // Transform the columns to CSV
-        maxRows = Math.max.apply(this, Highcharts.map(columns, function (col) { return col.length; }));
-        for (row = 0; row < maxRows; row = row + 1) {
-            line = [];
-            for (col = 0; col < columns.length; col = col + 1) {
-                line.push(columns[col][row]);
-            }
-            csv += line.join(itemDelimiter);
-            if (row < maxRows - 1) {
-                csv += lineDelimiter;
+        // Make a sortable array
+        for (x in rows) {
+            if (rows.hasOwnProperty('x')) {
+                rowArr.push(rows[x]);
             }
         }
+        // Sort it by X values
+        rowArr.sort(function (a, b) {
+            return a.x - b.x;
+        });
+
+        // Add header row
+        csv = (xAxis.isDatetimeAxis ? 'DateTime' : xAxis.categories ? 'Category' : 'X values') + itemDelimiter +
+            names.join(itemDelimiter) + lineDelimiter;
+
+        // Transform the rows to CSV
+        each(rowArr, function (row, i) {
+
+            // Add the X/date/category
+            csv += xAxis.isDatetimeAxis ? Highcharts.dateFormat(dateFormat, row.x) : xAxis.categories ? Highcharts.pick(xAxis.categories[row.x], row.x) : row.x;
+            csv += itemDelimiter;
+
+            // Add the values
+            csv += row.join(itemDelimiter);
+
+            // Add the line delimiter
+            if (i < rowArr.length - 1) {
+                csv += lineDelimiter;
+            }
+        });
 
         return csv;
     };
