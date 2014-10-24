@@ -1,6 +1,6 @@
 {
     "name": "Export-CSV",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "title": "Export Chart Data To CSV",
     "demo": [
         "http://jsfiddle.net/highcharts/cqjvD/",
