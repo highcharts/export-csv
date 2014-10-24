@@ -43,7 +43,7 @@
 
         // Make a sortable array
         for (x in rows) {
-            if (rows.hasOwnProperty('x')) {
+            if (rows.hasOwnProperty(x)) {
                 rowArr.push(rows[x]);
             }
         }
