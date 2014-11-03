@@ -94,7 +94,7 @@
                 if (downloadAttrSupported) {
                     // Client side extraction
                     a = document.createElement('a');
-                    a.href        = 'data:attachment/csv,' + this.getCSV().replace(/\n/g, '%0A');
+                    a.href		  = 'data:attachment/csv;charset=utf-8,%EF%BB%BF' + this.getCSV().replace(/\n/g, '%0A');
                     a.target      = '_blank';
                     a.download    = (this.title ? this.title.textStr.replace(/ /g, '-').toLowerCase() : 'chart') + '.csv';
                     document.body.appendChild(a);
