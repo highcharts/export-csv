@@ -81,7 +81,7 @@
         var csv = '',
             rows = this.getDataRows(),
             options = (this.options.exporting || {}).csv || {},
-            itemDelimiter = options.itemDelimiter || ';', // use ';' for direct import to Excel
+            itemDelimiter = options.itemDelimiter || ',', //fix for formate in excel (Universal Usability).  ';' might result into not properly formated excel.
             lineDelimiter = options.lineDelimiter || '\n'; // '\n' isn't working with the js csv data extraction
 
         // Transform the rows to CSV
