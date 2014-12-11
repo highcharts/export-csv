@@ -1,13 +1,13 @@
 {
     "name": "Export-CSV",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "title": "Export Chart Data To CSV",
     "demo": [
         "http://jsfiddle.net/highcharts/cqjvD/",
         "http://jsfiddle.net/highcharts/2Jyn5/"
     ],
     "author": {
-        "name": "Torstein Hønsi",
+        "name": "Torstein Hønsi, Torgrim Thorsen",
         "url": "https://github.com/highslide-software"
     },
     "licenses": [

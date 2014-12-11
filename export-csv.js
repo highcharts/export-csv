@@ -129,7 +129,7 @@
             a = document.createElement('a');
             a.href = href;
             a.target      = '_blank';
-            a.download    = name + extention;
+            a.download    = name + '.' + extention;
             document.body.appendChild(a);
             a.click();
             a.remove();
