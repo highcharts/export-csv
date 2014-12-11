@@ -129,7 +129,7 @@
             a = document.createElement('a');
             a.href = href;
             a.target      = '_blank';
-            a.download    = name + extention;
+            a.download    = name + '.' + extention;
             document.body.appendChild(a);
             a.click();
             a.remove();
@@ -142,7 +142,7 @@
             // Fall back to server side handling
             Highcharts.post('http://www.highcharts.com/studies/csv-export/download.php', {
                 data: content,
-                type: MIME + '.' + extention,
+                type: MIME,
                 extension: extention
             });
         }

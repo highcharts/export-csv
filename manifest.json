@@ -1,0 +1,27 @@
+{
+    "name": "Export-CSV",
+    "version": "1.2.1",
+    "title": "Export Chart Data To CSV",
+    "demo": [
+        "http://jsfiddle.net/highcharts/cqjvD/",
+        "http://jsfiddle.net/highcharts/2Jyn5/"
+    ],
+    "author": {
+        "name": "Torstein Hønsi",
+        "url": "https://github.com/highslide-software"
+    },
+    "licenses": [
+        {
+            "type": "MIT",
+            "url": "https://github.com/highslide-software/export-csv/blob/master/LICENSE"
+        }
+    ],
+    "description": "Highcharts plugin to export the chart data to a CSV or XLS file. Two methods, getCSV and getTable, are added to the chart object for programmatic access, and menu items is added to the export menu for GUI access.",
+    "keywords": [
+     "export",
+     "csv"
+    ],
+    "dependencies": {
+        "Highcharts": ">=3.0.0"
+    }
+}
