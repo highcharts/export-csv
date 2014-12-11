@@ -7,8 +7,10 @@
         "http://jsfiddle.net/highcharts/2Jyn5/"
     ],
     "author": {
-        "name": "Torstein Hønsi, Torgrim Thorsen",
+        "name": "Torstein Hønsi",
         "url": "https://github.com/highslide-software"
+        "name": "Torgrim Thorsen",
+        "url": "https://github.com/SirAlexiner"
     },
     "licenses": [
         {
