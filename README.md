@@ -15,7 +15,7 @@ This plugin is published under the MIT license, and the license document is incl
 Which date format to use for exported dates on a datetime X axis. See [Highcharts.dateFormat](http://api.highcharts.com/highcharts#Highcharts.dateFormat\(\)).
 
 * `exporting.csv.itemDelimiter`
-The item delimiter, defaults to `,`. Use `;` for direct import to Excel.
+The item delimiter, defaults to `;`. Use `;` for direct import to Excel.
 
 * `exporting.csv.lineDelimiter`
 The line delimiter, defaults to `\\n`.
