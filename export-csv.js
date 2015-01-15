@@ -1,5 +1,5 @@
 /**
- * A small plugin for getting the CSV of a rendered chart
+ * A small plugin for getting the CSV and XLS of a rendered chart
  */
 /*global Highcharts, window, document, Blob */
 (function (Highcharts) {
@@ -76,7 +76,7 @@
     /**
      * Get a CSV string
      */
-    Highcharts.Chart.prototype.getCSV = function () {
+    Highcharts.Chart.prototype.getCSV = function (useLocalDecimalPoint) {
         var csv = '',
             rows = this.getDataRows(),
             options = (this.options.exporting || {}).csv || {},
@@ -85,7 +85,21 @@
 
         // Transform the rows to CSV
         each(rows, function (row, i) {
-
+            var val = '',
+                j = row.length,
+                n = useLocalDecimalPoint ? (1.1).toLocaleString()[1] : '.';
+            while (j--) {
+                val = row[j];
+                if (typeof val === "string") {
+                    val = '"' + val + '"';
+                }
+                if (typeof val === 'number') {
+                    if (n === ',') {
+                        val = val.toString().replace(".", ",");
+                    }
+                }
+                row[j] = val;
+            }
             // Add the values
             csv += row.join(itemDelimiter);
 
@@ -100,30 +114,42 @@
     /**
      * Build a HTML table with the data
      */
-    Highcharts.Chart.prototype.getTable = function () {
+    Highcharts.Chart.prototype.getTable = function (useLocalDecimalPoint) {
         var html = '<table>',
             rows = this.getDataRows();
 
         // Transform the rows to HTML
         each(rows, function (row, i) {
+            var tag = i ? 'td' : 'th',
+                val,
+                j,
+                n = useLocalDecimalPoint ? (1.1).toLocaleString()[1] : '.';
 
-            var tag = i ? 'td' : 'th';
+            html += '<tr>';
+            for (j = 0; j < row.length; j++) {
+                val = row[j];
+                // Add the cell
+                if (typeof val === 'number') {
+                    if (n === ',') {
+                        html += '<' + tag + (typeof val === 'number' ? ' class="number"' : '') + '>' + val.toString().replace(".", ",") + '</' + tag + '>';
+                    } else {
+                        html += '<' + tag + (typeof val === 'number' ? ' class="number"' : '') + '>' + val.toString() + '</' + tag + '>';
+                    }
+                } else {
+                    html += '<' + tag + '>' + val + '</' + tag + '>';
+                }
+            }
 
-            html += '<tr><' + tag + '>';
-
-            // Add the cells
-            html += row.join('</' + tag + '><' + tag + '>');
-
-            html += '</' + tag + '></tr>';
-
+            html += '</tr>';
         });
         html += '</table>';
         return html;
     };
 
-    function getContent(href, extention, content, name, MIME) {
+    function getContent(chart, href, extention, content, MIME) {
         var a,
-            blobObject;
+            blobObject,
+            name = (chart.title ? chart.title.textStr.replace(/ /g, '-').toLowerCase() : 'chart');
         // Download attribute supported
         if (downloadAttrSupported) {
             a = document.createElement('a');
@@ -142,7 +168,7 @@
             // Fall back to server side handling
             Highcharts.post('http://www.highcharts.com/studies/csv-export/download.php', {
                 data: content,
-                type: MIME + '.' + extention,
+                type: MIME,
                 extension: extention
             });
         }
@@ -155,13 +181,13 @@
         Highcharts.getOptions().exporting.buttons.contextButton.menuItems.push({
             text: Highcharts.getOptions().lang.downloadCSV || 'Download CSV',
             onclick: function () {
-                var csv = this.getCSV();
+                var csv = this.getCSV(true);
                 getContent(
-                    'data:attachment/csv,' + csv.replace(/\n/g, '%0A'),
+                    this,
+                    'data:text/csv,' + csv.replace(/\n/g, '%0A'),
                     'csv',
                     csv,
-                    (this.title ? this.title.textStr.replace(/ /g, '-').toLowerCase() : 'chart'),
-                    'attachment/csv'
+                    'text/csv'
                 );
             }
 
@@ -169,15 +195,21 @@
             text: Highcharts.getOptions().lang.downloadXLS || 'Download XLS',
             onclick: function () {
                 var uri = 'data:application/vnd.ms-excel;base64,',
-                    template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body>'
-                        + this.getTable()
-                        + '</body></html>',
+                    template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">' +
+                        '<head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>' +
+                        '<x:Name>Ark1</x:Name>' +
+                        '<x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->' +
+                        '<style>td{border:none;font-family: Calibri, sans-serif;} .number{mso-number-format:"0.00";}</style>' +
+                        '<meta name=ProgId content=Excel.Sheet>' +
+                        '</head><body>' +
+                        this.getTable(true) +
+                        '</body></html>',
                     base64 = function (s) { return window.btoa(decodeURIComponent(encodeURIComponent(s))); };
                 getContent(
+                    this,
                     uri + base64(template),
                     'xls',
                     template,
-                    (this.title ? this.title.textStr.replace(/ /g, '-').toLowerCase() : 'chart'),
                     'application/vnd.ms-excel'
                 );
             }
