@@ -1,6 +1,6 @@
 {
     "name": "Export-CSV-XLS",
-    "version": "1.3.0",
+    "version": "1.3.1",
     "title": "Export Chart Data To CSV or XLS",
     "demo": [
         "http://jsfiddle.net/highcharts/cqjvD/",
@@ -22,11 +22,11 @@
             "url": "https://github.com/highslide-software/export-csv/blob/master/LICENSE"
         }
     ],
-    "description": "Highcharts plugin to export the chart data to a CSV or XLS file. Two methods, getCSV and getTable, are added to the chart object for programmatic access, and menu items is added to the export menu for GUI access. A boolean variable, useLocalDecimalPoint, is added to the methods getCSV and getTable for choosing whether to use the local decimal point or not.",
+    "description": "Highcharts plugin to export the chart data to CSV, XLS or HTML table. Two methods, getCSV and getTable, are added to the chart object for programmatic access, and menu items is added to the export menu for GUI access. A boolean variable, useLocalDecimalPoint, is added to the methods getCSV and getTable for choosing whether to use the local decimal point or not.",
     "keywords": [
-     "export",
-     "csv",
-     "xls"
+        "export",
+        "csv",
+        "xls"
     ],
     "dependencies": {
         "Highcharts": ">=3.0.0"

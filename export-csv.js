@@ -1,5 +1,9 @@
 /**
- * A small plugin for getting the CSV and XLS of a rendered chart
+ * A Highcharts plugin for exporting data from a rendered chart as CSV, XLS or HTML table
+ *
+ * Author:   Torstein Honsi
+ * Licence:  MIT
+ * Version:  1.3.1
  */
 /*global Highcharts, window, document, Blob */
 (function (Highcharts) {
@@ -80,7 +84,7 @@
         var csv = '',
             rows = this.getDataRows(),
             options = (this.options.exporting || {}).csv || {},
-            itemDelimiter = options.itemDelimiter || ';', // use ';' for direct import to Excel
+            itemDelimiter = options.itemDelimiter || ',', // use ';' for direct import to Excel
             lineDelimiter = options.lineDelimiter || '\n'; // '\n' isn't working with the js csv data extraction
 
         // Transform the rows to CSV
