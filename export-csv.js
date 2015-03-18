@@ -169,8 +169,11 @@
             blobObject = new Blob([content]);
             window.navigator.msSaveOrOpenBlob(blobObject, name + '.' + extention);
         } else {
+            var options = (chart.options.exporting || {}).csv || {},
+                url = options.url || 'http://www.highcharts.com/studies/csv-export/download.php';
+
             // Fall back to server side handling
-            Highcharts.post('http://www.highcharts.com/studies/csv-export/download.php', {
+            Highcharts.post(url, {
                 data: content,
                 type: MIME,
                 extension: extention
