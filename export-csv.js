@@ -153,7 +153,10 @@
     function getContent(chart, href, extention, content, MIME) {
         var a,
             blobObject,
-            name = (chart.title ? chart.title.textStr.replace(/ /g, '-').toLowerCase() : 'chart');
+            name = (chart.title ? chart.title.textStr.replace(/ /g, '-').toLowerCase() : 'chart'),
+            options = (chart.options.exporting || {}).csv || {},
+            url = options.url || 'http://www.highcharts.com/studies/csv-export/download.php';
+
         // Download attribute supported
         if (downloadAttrSupported) {
             a = document.createElement('a');
@@ -165,13 +168,11 @@
             a.remove();
 
         } else if (window.Blob && window.navigator.msSaveOrOpenBlob) {
-            //Falls to msSaveOrOpenBlob if download attribute is not supported
+            // Falls to msSaveOrOpenBlob if download attribute is not supported
             blobObject = new Blob([content]);
             window.navigator.msSaveOrOpenBlob(blobObject, name + '.' + extention);
-        } else {
-            var options = (chart.options.exporting || {}).csv || {},
-                url = options.url || 'http://www.highcharts.com/studies/csv-export/download.php';
 
+        } else {
             // Fall back to server side handling
             Highcharts.post(url, {
                 data: content,
