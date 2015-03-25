@@ -33,7 +33,7 @@
         // Loop the series and index values
         i = 0;
         each(this.series, function (series) {
-            if (series.options.includeInCSVExport !== false) {
+            if (series.options.includeInCSVExport !== false && series.points && series.points.length) {
                 names.push(series.name);
                 each(series.points, function (point) {
                     if (!rows[point.x]) {
