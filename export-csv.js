@@ -38,7 +38,6 @@
         each(this.series, function (series) {
             if (series.options.includeInCSVExport !== false) {
                 names.push(series.name);
-				//console.log(series.options.legendIndex);
                 each(series.points, function (point) {
                     if (!rows[point.x]) {
                         rows[point.x] = [];
