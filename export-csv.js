@@ -31,10 +31,14 @@
             dateFormat = options.dateFormat || '%Y-%m-%d %H:%M:%S';
 
         // Loop the series and index values
-        i = 0;
+        i = 0;		
+		this.series.sort(function (a,b) {
+			return a.options.legendIndex - b.options.legendIndex
+		});
         each(this.series, function (series) {
             if (series.options.includeInCSVExport !== false) {
                 names.push(series.name);
+				//console.log(series.options.legendIndex);
                 each(series.points, function (point) {
                     if (!rows[point.x]) {
                         rows[point.x] = [];
@@ -60,7 +64,7 @@
         }
         // Sort it by X values
         rowArr.sort(function (a, b) {
-            return a.x - b.x;
+			return a.x - b.x;
         });
 
         // Add header row
