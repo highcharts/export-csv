@@ -24,6 +24,7 @@
             rowArr = [],
             dataRows,
             names = [],
+			serieses = this.series.slice(),
             i,
             x,
 
@@ -32,10 +33,10 @@
 
         // Loop the series and index values
         i = 0;		
-		this.series.sort(function (a,b) {
+		serieses.sort(function (a,b) {
 			return a.options.legendIndex - b.options.legendIndex
 		});
-        each(this.series, function (series) {
+        each(serieses, function (series) {
             if (series.options.includeInCSVExport !== false) {
                 names.push(series.name);
                 each(series.points, function (point) {
