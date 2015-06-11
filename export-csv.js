@@ -13,6 +13,13 @@
     var each = Highcharts.each,
         downloadAttrSupported = document.createElement('a').download !== undefined;
 
+    Highcharts.setOptions({
+        lang: {
+            downloadCSV: 'Download CSV',
+            downloadXLS: 'Download XLS'
+        }
+    });
+
 
     /**
      * Get the data rows as a two dimensional array
@@ -226,10 +233,10 @@
     // https://raw.github.com/highslide-software/highcharts.com/master/studies/csv-export/csv.php
     if (Highcharts.getOptions().exporting) {
         Highcharts.getOptions().exporting.buttons.contextButton.menuItems.push({
-            text: Highcharts.getOptions().lang.downloadCSV || 'Download CSV',
+            textKey: 'downloadCSV',
             onclick: function () { this.downloadCSV(); }
         }, {
-            text: Highcharts.getOptions().lang.downloadXLS || 'Download XLS',
+            textKey: 'downloadXLS',
             onclick: function () { this.downloadXLS(); }
         });
     }
