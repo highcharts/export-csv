@@ -3,7 +3,7 @@
  *
  * Author:   Torstein Honsi
  * Licence:  MIT
- * Version:  1.3.2
+ * Version:  1.3.3
  */
 /*global Highcharts, window, document, Blob */
 (function (Highcharts) {
@@ -12,6 +12,13 @@
 
     var each = Highcharts.each,
         downloadAttrSupported = document.createElement('a').download !== undefined;
+
+    Highcharts.setOptions({
+        lang: {
+            downloadCSV: 'Download CSV',
+            downloadXLS: 'Download XLS'
+        }
+    });
 
 
     /**
@@ -226,10 +233,10 @@
     // https://raw.github.com/highslide-software/highcharts.com/master/studies/csv-export/csv.php
     if (Highcharts.getOptions().exporting) {
         Highcharts.getOptions().exporting.buttons.contextButton.menuItems.push({
-            text: Highcharts.getOptions().lang.downloadCSV || 'Download CSV',
+            textKey: 'downloadCSV',
             onclick: function () { this.downloadCSV(); }
         }, {
-            text: Highcharts.getOptions().lang.downloadXLS || 'Download XLS',
+            textKey: 'downloadXLS',
             onclick: function () { this.downloadXLS(); }
         });
     }
