@@ -40,9 +40,16 @@
         // Loop the series and index values
         i = 0;
         each(this.series, function (series) {
+            var keys = series.options.keys,
+                pointArrayMap = keys || series.pointArrayMap || ['y'],
+                valueCount = pointArrayMap.length,
+                j;
+
             if (series.options.includeInCSVExport !== false) {
                 names.push(series.name);
+
                 each(series.points, function (point) {
+                    j = 0;
                     if (!rows[point.x]) {
                         rows[point.x] = [];
                     }
@@ -53,9 +60,13 @@
                         rows[point.x].name = point.name;
                     }
 
-                    rows[point.x][i] = point.y;
+                    while (j < valueCount) {
+                        rows[point.x][i + j] = point[pointArrayMap[j]];
+                        j = j + 1;
+                    }
+
                 });
-                i += 1;
+                i = j;
             }
         });
 
@@ -137,7 +148,7 @@
                 n = useLocalDecimalPoint ? (1.1).toLocaleString()[1] : '.';
 
             html += '<tr>';
-            for (j = 0; j < row.length; j++) {
+            for (j = 0; j < row.length; j = j + 1) {
                 val = row[j];
                 // Add the cell
                 if (typeof val === 'number') {
