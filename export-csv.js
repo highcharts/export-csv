@@ -31,6 +31,7 @@
             rowArr = [],
             dataRows,
             names = [],
+			serieses = this.series.slice(),
             i,
             x,
 
@@ -38,8 +39,11 @@
             dateFormat = options.dateFormat || '%Y-%m-%d %H:%M:%S';
 
         // Loop the series and index values
-        i = 0;
-        each(this.series, function (series) {
+        i = 0;		
+		serieses.sort(function (a,b) {
+			return a.options.legendIndex - b.options.legendIndex
+		});
+        each(serieses, function (series) {
             if (series.options.includeInCSVExport !== false) {
                 names.push(series.name);
                 each(series.points, function (point) {
@@ -67,7 +71,7 @@
         }
         // Sort it by X values
         rowArr.sort(function (a, b) {
-            return a.x - b.x;
+			return a.x - b.x;
         });
 
         // Add header row
