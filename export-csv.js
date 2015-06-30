@@ -3,7 +3,7 @@
  *
  * Author:   Torstein Honsi
  * Licence:  MIT
- * Version:  1.3.3
+ * Version:  1.3.4
  */
 /*global Highcharts, window, document, Blob */
 (function (Highcharts) {
@@ -45,7 +45,7 @@
                 valueCount = pointArrayMap.length,
                 j;
 
-            if (series.options.includeInCSVExport !== false) {
+            if (series.options.includeInCSVExport !== false && series.visible !== false) { // #55
                 names.push(series.name);
 
                 each(series.points, function (point) {
@@ -87,8 +87,19 @@
         // Transform the rows to CSV
         each(rowArr, function (row) {
 
+            var category = row.name;
+            if (!category) {
+                if (xAxis.isDatetimeAxis) {
+                    category = Highcharts.dateFormat(dateFormat, row.x);
+                } else if (xAxis.categories) {
+                    category = Highcharts.pick(xAxis.names[row.x], xAxis.categories[row.x], row.x)
+                } else {
+                    category = row.x;
+                }
+            }
+
             // Add the X/date/category
-            row.unshift(row.name || (xAxis.isDatetimeAxis ? Highcharts.dateFormat(dateFormat, row.x) : xAxis.categories ? Highcharts.pick(xAxis.categories[row.x], row.x) : row.x));
+            row.unshift(category);
             dataRows.push(row);
         });
 
@@ -228,7 +239,9 @@
                 '</head><body>' +
                 this.getTable(true) +
                 '</body></html>',
-            base64 = function (s) { return window.btoa(decodeURIComponent(encodeURIComponent(s))); };
+            base64 = function (s) { 
+                return window.btoa(unescape(encodeURIComponent(s))); // #50
+            };
         getContent(
             this,
             uri + base64(template),
