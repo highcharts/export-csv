@@ -87,8 +87,19 @@
         // Transform the rows to CSV
         each(rowArr, function (row) {
 
+            var category = row.name;
+            if (!category) {
+                if (xAxis.isDatetimeAxis) {
+                    category = Highcharts.dateFormat(dateFormat, row.x);
+                } else if (xAxis.categories) {
+                    category = Highcharts.pick(xAxis.names[row.x], xAxis.categories[row.x], row.x)
+                } else {
+                    category = row.x;
+                }
+            }
+
             // Add the X/date/category
-            row.unshift(row.name || (xAxis.isDatetimeAxis ? Highcharts.dateFormat(dateFormat, row.x) : xAxis.categories ? Highcharts.pick(xAxis.categories[row.x], row.x) : row.x));
+            row.unshift(category);
             dataRows.push(row);
         });
 
