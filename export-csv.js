@@ -45,7 +45,7 @@
                 valueCount = pointArrayMap.length,
                 j;
 
-            if (series.options.includeInCSVExport !== false) {
+            if (series.options.includeInCSVExport !== false && series.visible !== false) { // #55
                 names.push(series.name);
 
                 each(series.points, function (point) {
