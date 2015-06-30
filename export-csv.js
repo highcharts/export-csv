@@ -228,7 +228,9 @@
                 '</head><body>' +
                 this.getTable(true) +
                 '</body></html>',
-            base64 = function (s) { return window.btoa(decodeURIComponent(encodeURIComponent(s))); };
+            base64 = function (s) { 
+                return window.btoa(unescape(encodeURIComponent(s))); // #50
+            };
         getContent(
             this,
             uri + base64(template),
