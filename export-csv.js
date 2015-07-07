@@ -179,7 +179,7 @@
         return html;
     };
 
-    function getContent(chart, href, extention, content, MIME) {
+    function getContent(chart, href, extension, content, MIME) {
         var a,
             blobObject,
             name = (chart.title ? chart.title.textStr.replace(/ /g, '-').toLowerCase() : 'chart'),
@@ -191,7 +191,7 @@
             a = document.createElement('a');
             a.href = href;
             a.target      = '_blank';
-            a.download    = name + '.' + extention;
+            a.download    = name + '.' + extension;
             document.body.appendChild(a);
             a.click();
             a.remove();
@@ -199,14 +199,14 @@
         } else if (window.Blob && window.navigator.msSaveOrOpenBlob) {
             // Falls to msSaveOrOpenBlob if download attribute is not supported
             blobObject = new Blob([content]);
-            window.navigator.msSaveOrOpenBlob(blobObject, name + '.' + extention);
+            window.navigator.msSaveOrOpenBlob(blobObject, name + '.' + extension);
 
         } else {
             // Fall back to server side handling
             Highcharts.post(url, {
                 data: content,
                 type: MIME,
-                extension: extention
+                extension: extension
             });
         }
     }
