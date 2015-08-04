@@ -182,9 +182,17 @@
     function getContent(chart, href, extension, content, MIME) {
         var a,
             blobObject,
-            name = (chart.title ? chart.title.textStr.replace(/ /g, '-').toLowerCase() : 'chart'),
+            name,
             options = (chart.options.exporting || {}).csv || {},
             url = options.url || 'http://www.highcharts.com/studies/csv-export/download.php';
+
+        if (chart.options.exporting.filename) {
+            name = chart.options.exporting.filename;
+        } else if (chart.title) {
+            name = chart.title.textStr.replace(/ /g, '-').toLowerCase();
+        } else {
+            name = 'chart';
+        }
 
         // Download attribute supported
         if (downloadAttrSupported) {
