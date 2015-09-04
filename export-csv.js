@@ -34,9 +34,13 @@
             i,
             x,
 
-            // Options
+
+        // Options
             dateFormat = options.dateFormat || '%Y-%m-%d %H:%M:%S';
 
+        if (this.options.chart.type == 'bubble' || this.options.chart.type == 'scatter') {
+            return this.getBubbleDataRows()
+        }
         // Loop the series and index values
         i = 0;
         each(this.series, function (series) {
@@ -101,6 +105,44 @@
             // Add the X/date/category
             row.unshift(category);
             dataRows.push(row);
+        });
+
+        return dataRows;
+    };
+
+    /**
+     * Get the data rows from bubble and scatter charts
+     */
+    Highcharts.Chart.prototype.getBubbleDataRows = function () {
+        var dataRows = [];
+        var bubble = false;
+
+        if (this.options.chart.type == 'bubble') {
+            bubble = true;
+        }
+
+        // Headers
+        var headers = [
+            'Series',
+            this.options.xAxis[0].title.text,
+            this.options.yAxis[0].title.text,
+        ];
+
+        if (bubble) {
+            headers.push('Bubble Size')
+        }
+
+        dataRows.push(headers);
+
+        // Row: Series, X, Y, (Z)
+        each(this.series, function (series) {
+            each(series.points, function (point) {
+                var row = [series.name, point.x, point.y];
+                if (bubble) {
+                    row.push(point.z);
+                }
+                dataRows.push(row);
+            });
         });
 
         return dataRows;
@@ -247,7 +289,7 @@
                 '</head><body>' +
                 this.getTable(true) +
                 '</body></html>',
-            base64 = function (s) { 
+            base64 = function (s) {
                 return window.btoa(unescape(encodeURIComponent(s))); // #50
             };
         getContent(
