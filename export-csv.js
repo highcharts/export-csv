@@ -35,7 +35,10 @@
             x,
 
             // Options
-            dateFormat = options.dateFormat || '%Y-%m-%d %H:%M:%S';
+            dateFormat = options.dateFormat || '%Y-%m-%d %H:%M:%S',
+            columnHeaderFormatter = options.columnHeaderFormatter || function (series, key, keyLength) {
+                return series.name + (keyLength > 1 ? ' ('+ key + ')' : '');
+            };
 
         // Loop the series and index values
         i = 0;
@@ -46,7 +49,11 @@
                 j;
 
             if (series.options.includeInCSVExport !== false && series.visible !== false) { // #55
-                names.push(series.name);
+                j = 0;
+                while (j < valueCount) {
+                    names.push(columnHeaderFormatter(series, pointArrayMap[j], pointArrayMap.length));
+                    j = j + 1;
+                }
 
                 each(series.points, function (point) {
                     j = 0;
