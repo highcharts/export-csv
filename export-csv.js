@@ -3,7 +3,7 @@
  *
  * Author:   Torstein Honsi
  * Licence:  MIT
- * Version:  1.3.5
+ * Version:  1.3.6
  */
 /*global Highcharts, window, document, Blob */
 (function (Highcharts) {
@@ -35,7 +35,10 @@
             x,
 
             // Options
-            dateFormat = options.dateFormat || '%Y-%m-%d %H:%M:%S';
+            dateFormat = options.dateFormat || '%Y-%m-%d %H:%M:%S',
+            columnHeaderFormatter = options.columnHeaderFormatter || function (series, key, keyLength) {
+                return series.name + (keyLength > 1 ? ' ('+ key + ')' : '');
+            };
 
         // Loop the series and index values
         i = 0;
@@ -43,25 +46,33 @@
             var keys = series.options.keys,
                 pointArrayMap = keys || series.pointArrayMap || ['y'],
                 valueCount = pointArrayMap.length,
+                requireSorting = series.requireSorting,
                 j;
 
             if (series.options.includeInCSVExport !== false && series.visible !== false) { // #55
-                names.push(series.name);
+                j = 0;
+                while (j < valueCount) {
+                    names.push(columnHeaderFormatter(series, pointArrayMap[j], pointArrayMap.length));
+                    j = j + 1;
+                }
 
-                each(series.points, function (point) {
+                each(series.points, function (point, pIdx) {
+                    var key = requireSorting ? point.x : pIdx;
+
                     j = 0;
-                    if (!rows[point.x]) {
-                        rows[point.x] = [];
+
+                    if (!rows[key]) {
+                        rows[key] = [];
                     }
-                    rows[point.x].x = point.x;
+                    rows[key].x = point.x;
 
                     // Pies, funnels etc. use point name in X row
                     if (!series.xAxis) {
-                        rows[point.x].name = point.name;
+                        rows[key].name = point.name;
                     }
 
                     while (j < valueCount) {
-                        rows[point.x][i + j] = point[pointArrayMap[j]];
+                        rows[key][i + j] = point[pointArrayMap[j]];
                         j = j + 1;
                     }
 
@@ -182,9 +193,17 @@
     function getContent(chart, href, extension, content, MIME) {
         var a,
             blobObject,
-            name = (chart.title ? chart.title.textStr.replace(/ /g, '-').toLowerCase() : 'chart'),
+            name,
             options = (chart.options.exporting || {}).csv || {},
             url = options.url || 'http://www.highcharts.com/studies/csv-export/download.php';
+
+        if (chart.options.exporting.filename) {
+            name = chart.options.exporting.filename;
+        } else if (chart.title) {
+            name = chart.title.textStr.replace(/ /g, '-').toLowerCase();
+        } else {
+            name = 'chart';
+        }
 
         // Download attribute supported
         if (downloadAttrSupported) {
