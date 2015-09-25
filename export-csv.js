@@ -3,7 +3,7 @@
  *
  * Author:   Torstein Honsi
  * Licence:  MIT
- * Version:  1.3.5
+ * Version:  1.3.6
  */
 /*global Highcharts, window, document, Blob */
 (function (Highcharts) {
@@ -46,6 +46,7 @@
             var keys = series.options.keys,
                 pointArrayMap = keys || series.pointArrayMap || ['y'],
                 valueCount = pointArrayMap.length,
+                requireSorting = series.requireSorting,
                 j;
 
             if (series.options.includeInCSVExport !== false && series.visible !== false) { // #55
@@ -55,20 +56,23 @@
                     j = j + 1;
                 }
 
-                each(series.points, function (point) {
+                each(series.points, function (point, pIdx) {
+                    var key = requireSorting ? point.x : pIdx;
+
                     j = 0;
-                    if (!rows[point.x]) {
-                        rows[point.x] = [];
+
+                    if (!rows[key]) {
+                        rows[key] = [];
                     }
-                    rows[point.x].x = point.x;
+                    rows[key].x = point.x;
 
                     // Pies, funnels etc. use point name in X row
                     if (!series.xAxis) {
-                        rows[point.x].name = point.name;
+                        rows[key].name = point.name;
                     }
 
                     while (j < valueCount) {
-                        rows[point.x][i + j] = point[pointArrayMap[j]];
+                        rows[key][i + j] = point[pointArrayMap[j]];
                         j = j + 1;
                     }
 
