@@ -1,0 +1,9 @@
+{
+  "name": "Highcharts export-csv plugin",
+  "main": "export-csv.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "README.md"
+  ]
+}
