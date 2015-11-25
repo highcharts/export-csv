@@ -3,7 +3,7 @@
  *
  * Author:   Torstein Honsi
  * Licence:  MIT
- * Version:  1.3.6
+ * Version:  1.3.7
  */
 /*global Highcharts, window, document, Blob */
 (function (Highcharts) {
@@ -11,6 +11,7 @@
     'use strict';
 
     var each = Highcharts.each,
+        pick = Highcharts.pick,
         downloadAttrSupported = document.createElement('a').download !== undefined;
 
     Highcharts.setOptions({
@@ -47,7 +48,13 @@
                 pointArrayMap = keys || series.pointArrayMap || ['y'],
                 valueCount = pointArrayMap.length,
                 requireSorting = series.requireSorting,
+                categoryMap = {},
                 j;
+
+            // Map the categories for value axes
+            each(pointArrayMap, function (prop) {
+                categoryMap[prop] = (series[prop + 'Axis'] && series[prop + 'Axis'].categories) || [];
+            });
 
             if (series.options.includeInCSVExport !== false && series.visible !== false) { // #55
                 j = 0;
@@ -57,7 +64,9 @@
                 }
 
                 each(series.points, function (point, pIdx) {
-                    var key = requireSorting ? point.x : pIdx;
+                    var key = requireSorting ? point.x : pIdx,
+                        prop,
+                        val;
 
                     j = 0;
 
@@ -72,7 +81,9 @@
                     }
 
                     while (j < valueCount) {
-                        rows[key][i + j] = point[pointArrayMap[j]];
+                        prop = pointArrayMap[j]; // y, z etc
+                        val = point[prop];
+                        rows[key][i + j] = pick(categoryMap[prop][val], val); // Pick a Y axis category if present
                         j = j + 1;
                     }
 
@@ -103,7 +114,7 @@
                 if (xAxis.isDatetimeAxis) {
                     category = Highcharts.dateFormat(dateFormat, row.x);
                 } else if (xAxis.categories) {
-                    category = Highcharts.pick(xAxis.names[row.x], xAxis.categories[row.x], row.x)
+                    category = pick(xAxis.names[row.x], xAxis.categories[row.x], row.x)
                 } else {
                     category = row.x;
                 }
