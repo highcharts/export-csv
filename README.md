@@ -25,3 +25,13 @@ The line delimiter, defaults to `\\n`.
 
 * `series.includeInCSVExport`
 Set this to false to prevent an individual series from being exported. To prevent the navigator in a stock chart, set `navigator.series.includeInCSVExport` to false.
+
+### Methods
+* `Chart.getCSV()`
+Returns the current chart data as a CSV string
+
+* `Chart.getTable()`
+Returns the current chart data as a HTML table string, ready to be inserted into the DOM using `innerHTML`.
+
+* `Chart.getDataRows()`
+Returns the current chart data as a two dimensional array.

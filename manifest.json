@@ -23,7 +23,7 @@
             "url": "https://github.com/highslide-software/export-csv/blob/master/LICENSE"
         }
     ],
-    "description": "Highcharts plugin to export the chart data to CSV, XLS or HTML table. Two methods, getCSV and getTable, are added to the chart object for programmatic access, and menu items is added to the export menu for GUI access. A boolean variable, useLocalDecimalPoint, is added to the methods getCSV and getTable for choosing whether to use the local decimal point or not.",
+    "description": "Highcharts plugin to export the chart data to CSV, XLS or HTML table.",
     "keywords": [
         "export",
         "csv",
