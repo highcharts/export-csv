@@ -32,6 +32,7 @@
             rowArr = [],
             dataRows,
             names = [],
+            xTitle,
             i,
             x,
 
@@ -104,7 +105,13 @@
         });
 
         // Add header row
-        dataRows = [[xAxis.isDatetimeAxis ? 'DateTime' : 'Category'].concat(names)];
+        // Add header row
+        if (xAxis.hasOwnProperty('axisTitle') && xAxis.axisTitle.hasOwnProperty('textStr')) {
+            xTitle = xAxis.axisTitle.textStr;
+        } else {
+            xTitle = xAxis.isDatetimeAxis ? 'DateTime' : 'Category';
+        }
+        dataRows = [[xTitle].concat(names)];
 
         // Transform the rows to CSV
         each(rowArr, function (row) {
@@ -269,7 +276,7 @@
                 '</head><body>' +
                 this.getTable(true) +
                 '</body></html>',
-            base64 = function (s) { 
+            base64 = function (s) {
                 return window.btoa(unescape(encodeURIComponent(s))); // #50
             };
         getContent(
