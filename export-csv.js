@@ -34,6 +34,7 @@
             names = [],
             i,
             x,
+            xTitle = xAxis.options.title && xAxis.options.title.text,
 
             // Options
             dateFormat = options.dateFormat || '%Y-%m-%d %H:%M:%S',
@@ -104,7 +105,10 @@
         });
 
         // Add header row
-        dataRows = [[xAxis.isDatetimeAxis ? 'DateTime' : 'Category'].concat(names)];
+        if (!xTitle) {
+            xTitle = xAxis.isDatetimeAxis ? 'DateTime' : 'Category';
+        }
+        dataRows = [[xTitle].concat(names)];
 
         // Transform the rows to CSV
         each(rowArr, function (row) {
