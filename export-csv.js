@@ -220,20 +220,21 @@
             name = 'chart';
         }
 
-        // Download attribute supported
-        if (downloadAttrSupported) {
-            a = document.createElement('a');
-            a.href = href;
-            a.target      = '_blank';
-            a.download    = name + '.' + extension;
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-
-        } else if (window.Blob && window.navigator.msSaveOrOpenBlob) {
+        // MS specific. Check this first because of bug with Edge (#76)
+        if (window.Blob && window.navigator.msSaveOrOpenBlob) {
             // Falls to msSaveOrOpenBlob if download attribute is not supported
             blobObject = new Blob([content]);
             window.navigator.msSaveOrOpenBlob(blobObject, name + '.' + extension);
+
+        // Download attribute supported
+        } else if (downloadAttrSupported) {
+            a = document.createElement('a');
+            a.href = href;
+            a.target = '_blank';
+            a.download = name + '.' + extension;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
 
         } else {
             // Fall back to server side handling
