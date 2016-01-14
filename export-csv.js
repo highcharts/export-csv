@@ -194,6 +194,8 @@
                     } else {
                         html += '<' + tag + ' class="number">' + val.toString() + '</' + tag + '>';
                     }
+                } else if (typeof val === 'undefined') {
+                    html += '<' + tag + '/>';
                 } else {
                     html += '<' + tag + '>' + val + '</' + tag + '>';
                 }
