@@ -190,10 +190,12 @@
                 // Add the cell
                 if (typeof val === 'number') {
                     if (n === ',') {
-                        html += '<' + tag + (typeof val === 'number' ? ' class="number"' : '') + '>' + val.toString().replace(".", ",") + '</' + tag + '>';
+                        html += '<' + tag + ' class="number">' + val.toString().replace(".", ",") + '</' + tag + '>';
                     } else {
-                        html += '<' + tag + (typeof val === 'number' ? ' class="number"' : '') + '>' + val.toString() + '</' + tag + '>';
+                        html += '<' + tag + ' class="number">' + val.toString() + '</' + tag + '>';
                     }
+                } else if (typeof val === 'undefined') {
+                    html += '<' + tag + '/>';
                 } else {
                     html += '<' + tag + '>' + val + '</' + tag + '>';
                 }
