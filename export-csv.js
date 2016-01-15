@@ -3,7 +3,7 @@
  *
  * Author:   Torstein Honsi
  * Licence:  MIT
- * Version:  1.3.7
+ * Version:  1.3.8
  */
 /*global Highcharts, window, document, Blob */
 (function (Highcharts) {
@@ -189,13 +189,14 @@
                 val = row[j];
                 // Add the cell
                 if (typeof val === 'number') {
+                    val = val.toString();
                     if (n === ',') {
-                        html += '<' + tag + (typeof val === 'number' ? ' class="number"' : '') + '>' + val.toString().replace(".", ",") + '</' + tag + '>';
-                    } else {
-                        html += '<' + tag + (typeof val === 'number' ? ' class="number"' : '') + '>' + val.toString() + '</' + tag + '>';
+                        val = val.replace('.', n);
                     }
+                    html += '<' + tag + ' class="number">' + val + '</' + tag + '>';
+
                 } else {
-                    html += '<' + tag + '>' + val + '</' + tag + '>';
+                    html += '<' + tag + '>' + (val === undefined ? '' : val) + '</' + tag + '>';
                 }
             }
 
