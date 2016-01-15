@@ -3,7 +3,7 @@
  *
  * Author:   Torstein Honsi
  * Licence:  MIT
- * Version:  1.3.7
+ * Version:  1.3.8
  */
 /*global Highcharts, window, document, Blob */
 (function (Highcharts) {
@@ -34,6 +34,7 @@
             names = [],
             i,
             x,
+            xTitle = xAxis.options.title && xAxis.options.title.text,
 
             // Options
             dateFormat = options.dateFormat || '%Y-%m-%d %H:%M:%S',
@@ -104,7 +105,10 @@
         });
 
         // Add header row
-        dataRows = [[xAxis.isDatetimeAxis ? 'DateTime' : 'Category'].concat(names)];
+        if (!xTitle) {
+            xTitle = xAxis.isDatetimeAxis ? 'DateTime' : 'Category';
+        }
+        dataRows = [[xTitle].concat(names)];
 
         // Transform the rows to CSV
         each(rowArr, function (row) {
@@ -185,13 +189,14 @@
                 val = row[j];
                 // Add the cell
                 if (typeof val === 'number') {
+                    val = val.toString();
                     if (n === ',') {
-                        html += '<' + tag + (typeof val === 'number' ? ' class="number"' : '') + '>' + val.toString().replace(".", ",") + '</' + tag + '>';
-                    } else {
-                        html += '<' + tag + (typeof val === 'number' ? ' class="number"' : '') + '>' + val.toString() + '</' + tag + '>';
+                        val = val.replace('.', n);
                     }
+                    html += '<' + tag + ' class="number">' + val + '</' + tag + '>';
+
                 } else {
-                    html += '<' + tag + '>' + val + '</' + tag + '>';
+                    html += '<' + tag + '>' + (val === undefined ? '' : val) + '</' + tag + '>';
                 }
             }
 
@@ -216,20 +221,21 @@
             name = 'chart';
         }
 
-        // Download attribute supported
-        if (downloadAttrSupported) {
-            a = document.createElement('a');
-            a.href = href;
-            a.target      = '_blank';
-            a.download    = name + '.' + extension;
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-
-        } else if (window.Blob && window.navigator.msSaveOrOpenBlob) {
+        // MS specific. Check this first because of bug with Edge (#76)
+        if (window.Blob && window.navigator.msSaveOrOpenBlob) {
             // Falls to msSaveOrOpenBlob if download attribute is not supported
             blobObject = new Blob([content]);
             window.navigator.msSaveOrOpenBlob(blobObject, name + '.' + extension);
+
+        // Download attribute supported
+        } else if (downloadAttrSupported) {
+            a = document.createElement('a');
+            a.href = href;
+            a.target = '_blank';
+            a.download = name + '.' + extension;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
 
         } else {
             // Fall back to server side handling
