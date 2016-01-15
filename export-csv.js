@@ -64,31 +64,53 @@
                     j = j + 1;
                 }
 
-                each(series.points, function (point, pIdx) {
-                    var key = requireSorting ? point.x : pIdx,
-                        prop,
-                        val;
+                if (options.exportAllRawData) {
+                    each(series.xData, function (xValue, pIdx) {
+                        var key = requireSorting ? xValue : pIdx,
+                            prop,
+                            val;
 
-                    j = 0;
+                        j = 0;
 
-                    if (!rows[key]) {
-                        rows[key] = [];
-                    }
-                    rows[key].x = point.x;
+                        if (!rows[key]) {
+                            rows[key] = [];
+                        }
+                        rows[key].x = xValue;
 
-                    // Pies, funnels etc. use point name in X row
-                    if (!series.xAxis) {
-                        rows[key].name = point.name;
-                    }
-
-                    while (j < valueCount) {
-                        prop = pointArrayMap[j]; // y, z etc
-                        val = point[prop];
-                        rows[key][i + j] = pick(categoryMap[prop][val], val); // Pick a Y axis category if present
-                        j = j + 1;
-                    }
-
-                });
+                        while (j < valueCount) {
+                            prop = pointArrayMap[j]; // y, z etc
+                            val = series.yData[pIdx];
+                            rows[key][i + j] = pick(categoryMap[prop][val], val); // Pick a Y axis category if present
+                            j = j + 1;
+                        }
+                    });
+                } else {
+                    each(series.points, function (point, pIdx) {
+                        var key = requireSorting ? point.x : pIdx,
+                            prop,
+                            val;
+    
+                        j = 0;
+    
+                        if (!rows[key]) {
+                            rows[key] = [];
+                        }
+                        rows[key].x = point.x;
+    
+                        // Pies, funnels etc. use point name in X row
+                        if (!series.xAxis) {
+                            rows[key].name = point.name;
+                        }
+    
+                        while (j < valueCount) {
+                            prop = pointArrayMap[j]; // y, z etc
+                            val = point[prop];
+                            rows[key][i + j] = pick(categoryMap[prop][val], val); // Pick a Y axis category if present
+                            j = j + 1;
+                        }
+    
+                    });
+                }
                 i = i + j;
             }
         });
