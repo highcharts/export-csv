@@ -6,7 +6,13 @@
  * Version:  1.3.8
  */
 /*global Highcharts, window, document, Blob */
-(function (Highcharts) {
+(function (factory) {
+    if (typeof module === 'object' && module.exports) {
+        module.exports = factory;
+    } else {
+        factory(Highcharts);
+    }
+})(function (Highcharts) {
 
     'use strict';
 
@@ -301,4 +307,4 @@
         });
     }
 
-}(Highcharts));
+});
