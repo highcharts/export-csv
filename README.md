@@ -1,12 +1,13 @@
 export-csv
 ==========
-This plugin allows the user to export the chart data to a CSV string.
+This plugin allows the user to export the chart data to various formats and views.
 
-The contents of the plugin is located in the javascript file "export-csv.js". 
+The contents of the plugin is located in the JavaScript file "export-csv.js". 
 This plugin is published under the MIT license, and the license document is included in the repository.
 
 ### Demos
 * [Categorized chart](http://jsfiddle.net/highcharts/cqjvD/)
+* [View data table from menu](http://jsfiddle.net/highcharts/j4w4s0mw/)
 * [Highstock with time axis](http://jsfiddle.net/highcharts/2Jyn5/)
 * [Unit tests](http://jsfiddle.net/highcharts/pspdp2de/)
 
@@ -35,3 +36,6 @@ Returns the current chart data as a HTML table string, ready to be inserted into
 
 * `Chart.getDataRows()`
 Returns the current chart data as a two dimensional array.
+
+* `Chart.viewData()`
+Inserts a data table below the chart container.

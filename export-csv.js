@@ -3,7 +3,7 @@
  *
  * Author:   Torstein Honsi
  * Licence:  MIT
- * Version:  1.3.8
+ * Version:  1.4.0
  */
 /*global Highcharts, window, document, Blob */
 (function (factory) {
@@ -23,7 +23,8 @@
     Highcharts.setOptions({
         lang: {
             downloadCSV: 'Download CSV',
-            downloadXLS: 'Download XLS'
+            downloadXLS: 'Download XLS',
+            viewData: 'View data table'
         }
     });
 
@@ -293,6 +294,17 @@
         );
     };
 
+    /**
+     * View the data in a table below the chart
+     */
+    Highcharts.Chart.prototype.viewData = function () {
+        var div = document.createElement('div');
+        div.className = 'highcharts-data-table';
+        // Insert after the chart container
+        this.renderTo.parentNode.insertBefore(div, this.renderTo.nextSibling);
+        div.innerHTML = this.getTable();
+    };
+
 
     // Add "Download CSV" to the exporting menu. Use download attribute if supported, else
     // run a simple PHP script that returns a file. The source code for the PHP script can be viewed at
@@ -304,6 +316,9 @@
         }, {
             textKey: 'downloadXLS',
             onclick: function () { this.downloadXLS(); }
+        }, {
+            textKey: 'viewData',
+            onclick: function () { this.viewData(); }
         });
     }
 
