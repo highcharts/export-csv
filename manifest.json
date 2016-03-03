@@ -1,6 +1,6 @@
 {
     "name": "Export Data",
-    "version": "1.4.0",
+    "version": "1.4.1",
     "title": "Export chart data to CSV, XLS, HTML or JS array",
     "demo": [
         "http://jsfiddle.net/highcharts/cqjvD/",
