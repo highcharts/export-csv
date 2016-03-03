@@ -3,7 +3,7 @@
  *
  * Author:   Torstein Honsi
  * Licence:  MIT
- * Version:  1.4.0
+ * Version:  1.4.1
  */
 /*global Highcharts, window, document, Blob */
 (function (Highcharts) {
@@ -292,11 +292,14 @@
      * View the data in a table below the chart
      */
     Highcharts.Chart.prototype.viewData = function () {
-        var div = document.createElement('div');
-        div.className = 'highcharts-data-table';
-        // Insert after the chart container
-        this.renderTo.parentNode.insertBefore(div, this.renderTo.nextSibling);
-        div.innerHTML = this.getTable();
+        if (!this.insertedTable) {
+            var div = document.createElement('div');
+            div.className = 'highcharts-data-table';
+            // Insert after the chart container
+            this.renderTo.parentNode.insertBefore(div, this.renderTo.nextSibling);
+            div.innerHTML = this.getTable();
+            this.insertedTable = true;
+        }
     };
 
 
