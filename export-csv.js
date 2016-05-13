@@ -279,6 +279,7 @@
                 '<x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->' +
                 '<style>td{border:none;font-family: Calibri, sans-serif;} .number{mso-number-format:"0.00";}</style>' +
                 '<meta name=ProgId content=Excel.Sheet>' +
+                '<meta charset=UTF-8>' +
                 '</head><body>' +
                 this.getTable(true) +
                 '</body></html>',
