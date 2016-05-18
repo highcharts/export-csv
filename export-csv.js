@@ -18,6 +18,7 @@
 
     var each = Highcharts.each,
         pick = Highcharts.pick,
+        seriesTypes = Highcharts.seriesTypes,
         downloadAttrSupported = document.createElement('a').download !== undefined;
 
     Highcharts.setOptions({
@@ -83,8 +84,8 @@
                     }
                     rows[key].x = point.x;
 
-                    // Pies, funnels etc. use point name in X row
-                    if (!series.xAxis) {
+                    // Pies, funnels, geo maps etc. use point name in X row
+                    if (!series.xAxis || series.exportKey === 'name') {
                         rows[key].name = point.name;
                     }
 
@@ -117,7 +118,7 @@
         }
         dataRows = [[xTitle].concat(names)];
 
-        // Transform the rows to CSV
+        // Add the category column
         each(rowArr, function (row) {
 
             var category = row.name;
@@ -324,6 +325,11 @@
             textKey: 'viewData',
             onclick: function () { this.viewData(); }
         });
+    }
+
+    // Series specific
+    if (seriesTypes.map) {
+        seriesTypes.map.prototype.exportKey = 'name';
     }
 
 });
