@@ -124,6 +124,10 @@
             var category = row.name;
             if (!category) {
                 if (xAxis.isDatetimeAxis) {
+                    if ( row.x instanceof Date )
+                    {
+                        row.x = row.x.getTime()
+                    }
                     category = Highcharts.dateFormat(dateFormat, row.x);
                 } else if (xAxis.categories) {
                     category = pick(xAxis.names[row.x], xAxis.categories[row.x], row.x)
