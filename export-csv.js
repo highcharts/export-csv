@@ -3,15 +3,22 @@
  *
  * Author:   Torstein Honsi
  * Licence:  MIT
- * Version:  1.4.1
+ * Version:  1.4.2
  */
 /*global Highcharts, window, document, Blob */
-(function (Highcharts) {
+(function (factory) {
+    if (typeof module === 'object' && module.exports) {
+        module.exports = factory;
+    } else {
+        factory(Highcharts);
+    }
+})(function (Highcharts) {
 
     'use strict';
 
     var each = Highcharts.each,
         pick = Highcharts.pick,
+        seriesTypes = Highcharts.seriesTypes,
         downloadAttrSupported = document.createElement('a').download !== undefined;
 
     Highcharts.setOptions({
@@ -77,8 +84,8 @@
                     }
                     rows[key].x = point.x;
 
-                    // Pies, funnels etc. use point name in X row
-                    if (!series.xAxis) {
+                    // Pies, funnels, geo maps etc. use point name in X row
+                    if (!series.xAxis || series.exportKey === 'name') {
                         rows[key].name = point.name;
                     }
 
@@ -111,12 +118,15 @@
         }
         dataRows = [[xTitle].concat(names)];
 
-        // Transform the rows to CSV
+        // Add the category column
         each(rowArr, function (row) {
 
             var category = row.name;
             if (!category) {
                 if (xAxis.isDatetimeAxis) {
+                    if (row.x instanceof Date) {
+                        row.x = row.x.getTime();
+                    }
                     category = Highcharts.dateFormat(dateFormat, row.x);
                 } else if (xAxis.categories) {
                     category = pick(xAxis.names[row.x], xAxis.categories[row.x], row.x)
@@ -255,7 +265,7 @@
         var csv = this.getCSV(true);
         getContent(
             this,
-            'data:text/csv,' + csv.replace(/\n/g, '%0A'),
+            'data:text/csv,\uFEFF' + csv.replace(/\n/g, '%0A'),
             'csv',
             csv,
             'text/csv'
@@ -273,6 +283,7 @@
                 '<x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->' +
                 '<style>td{border:none;font-family: Calibri, sans-serif;} .number{mso-number-format:"0.00";}</style>' +
                 '<meta name=ProgId content=Excel.Sheet>' +
+                '<meta charset=UTF-8>' +
                 '</head><body>' +
                 this.getTable(true) +
                 '</body></html>',
@@ -319,4 +330,9 @@
         });
     }
 
-}(Highcharts));
+    // Series specific
+    if (seriesTypes.map) {
+        seriesTypes.map.prototype.exportKey = 'name';
+    }
+
+});
