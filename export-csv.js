@@ -334,5 +334,8 @@
     if (seriesTypes.map) {
         seriesTypes.map.prototype.exportKey = 'name';
     }
+    if (seriesTypes.mapbubble) {
+        seriesTypes.mapbubble.prototype.exportKey = 'name';
+    }
 
 });
