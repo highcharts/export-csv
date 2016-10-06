@@ -25,7 +25,9 @@
         lang: {
             downloadCSV: 'Download CSV',
             downloadXLS: 'Download XLS',
-            viewData: 'View data table'
+            viewData: 'View data table',
+            xTitleCategoryExport: 'Category',   // used if xAxis is without title (Category axis)
+            xTitleDateTimeExport: 'DateTime'    // used if xAxis is without title (DateTime axis)
         }
     });
 
@@ -114,7 +116,7 @@
 
         // Add header row
         if (!xTitle) {
-            xTitle = xAxis.isDatetimeAxis ? 'DateTime' : 'Category';
+            xTitle = xAxis.isDatetimeAxis ? Highcharts.getOptions().lang.xTitleDateTimeExport : Highcharts.getOptions().lang.xTitleCategoryExport;
         }
         dataRows = [[xTitle].concat(names)];
 
