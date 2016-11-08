@@ -13,7 +13,7 @@ This plugin is published under the MIT license, and the license document is incl
 
 ### Options
 * `exporting.csv.columnHeaderFormatter`
-Formatter callback for the column headers. Parameters are `series` (the series object), `key` (the point key, for example `y` or `z`), and `keyLength`. By default it returns the series name, followed by the key if there is more than one key. 
+Formatter callback for the column headers. Parameters are `item` (the series or axis object), `key` (the point key, for example `y` or `z`), and `keyLength`. By default it returns the series name, followed by the key if there is more than one key. For the axis it returns the axis title or "Category" or "DateTime" by default.
 
 * `exporting.csv.dateFormat`
 Which date format to use for exported dates on a datetime X axis. See [Highcharts.dateFormat](http://api.highcharts.com/highcharts#Highcharts.dateFormat\(\)).
