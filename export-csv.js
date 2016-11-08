@@ -3,7 +3,7 @@
  *
  * Author:   Torstein Honsi
  * Licence:  MIT
- * Version:  1.4.2
+ * Version:  1.4.3
  */
 /*global Highcharts, window, document, Blob */
 (function (factory) {
@@ -42,12 +42,15 @@
             names = [],
             i,
             x,
-            xTitle = xAxis.options.title && xAxis.options.title.text,
-
+            xTitle,
             // Options
             dateFormat = options.dateFormat || '%Y-%m-%d %H:%M:%S',
-            columnHeaderFormatter = options.columnHeaderFormatter || function (series, key, keyLength) {
-                return series.name + (keyLength > 1 ? ' ('+ key + ')' : '');
+            columnHeaderFormatter = options.columnHeaderFormatter || function (item, key, keyLength) {
+                if (item instanceof Highcharts.Axis) {
+                    return (item.options.title && item.options.title.text) ||
+                        (item.isDatetimeAxis ? 'DateTime' : 'Category');
+                }
+                return item.name + (keyLength > 1 ? ' ('+ key + ')' : '');
             };
 
         // Loop the series and index values
@@ -113,9 +116,7 @@
         });
 
         // Add header row
-        if (!xTitle) {
-            xTitle = xAxis.isDatetimeAxis ? 'DateTime' : 'Category';
-        }
+        xTitle = columnHeaderFormatter(xAxis);
         dataRows = [[xTitle].concat(names)];
 
         // Add the category column
@@ -333,6 +334,9 @@
     // Series specific
     if (seriesTypes.map) {
         seriesTypes.map.prototype.exportKey = 'name';
+    }
+    if (seriesTypes.mapbubble) {
+        seriesTypes.mapbubble.prototype.exportKey = 'name';
     }
 
 });
