@@ -3,7 +3,7 @@
  *
  * Author:   Torstein Honsi
  * Licence:  MIT
- * Version:  1.4.3
+ * Version:  1.4.4
  */
 /*global Highcharts, window, document, Blob */
 (function (factory) {
