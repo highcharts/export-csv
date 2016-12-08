@@ -266,7 +266,7 @@
         var csv = this.getCSV(true);
         getContent(
             this,
-            'data:text/csv,\uFEFF' + csv.replace(/\n/g, '%0A'),
+            'data:text/csv,\uFEFF' + encodeURIComponent(csv),
             'csv',
             csv,
             'text/csv'
