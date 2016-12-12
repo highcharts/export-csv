@@ -304,14 +304,18 @@
      * View the data in a table below the chart
      */
     Highcharts.Chart.prototype.viewData = function () {
-        if (!this.insertedTable) {
-            var div = document.createElement('div');
-            div.className = 'highcharts-data-table';
+        if (!this.dataTableDiv) {
+            this.dataTableDiv = document.createElement('div');
+            this.dataTableDiv.className = 'highcharts-data-table';
+            
             // Insert after the chart container
-            this.renderTo.parentNode.insertBefore(div, this.renderTo.nextSibling);
-            div.innerHTML = this.getTable();
-            this.insertedTable = true;
+            this.renderTo.parentNode.insertBefore(
+                this.dataTableDiv,
+                this.renderTo.nextSibling
+            );
         }
+
+        this.dataTableDiv.innerHTML = this.getTable();
     };
 
 
