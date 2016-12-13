@@ -187,23 +187,23 @@
         var csv = '',
             rows = this.getDataRows(),
             options = (this.options.exporting || {}).csv || {},
+            dataFormatter = options.dataFormatter || function (val) {
+                return Highcharts.numberFormat(val, -1, useLocalDecimalPoint ? (1.1).toLocaleString()[1] : '.', '');
+            },
             itemDelimiter = options.itemDelimiter || ',', // use ';' for direct import to Excel
             lineDelimiter = options.lineDelimiter || '\n'; // '\n' isn't working with the js csv data extraction
 
         // Transform the rows to CSV
         each(rows, function (row, i) {
             var val = '',
-                j = row.length,
-                n = useLocalDecimalPoint ? (1.1).toLocaleString()[1] : '.';
+                j = row.length;
             while (j--) {
                 val = row[j];
                 if (typeof val === "string") {
                     val = '"' + val + '"';
                 }
                 if (typeof val === 'number') {
-                    if (n === ',') {
-                        val = val.toString().replace(".", ",");
-                    }
+                    val = dataFormatter(val);
                 }
                 row[j] = val;
             }
@@ -223,24 +223,24 @@
      */
     Highcharts.Chart.prototype.getTable = function (useLocalDecimalPoint) {
         var html = '<table><thead>',
-            rows = this.getDataRows();
+            rows = this.getDataRows(),
+            options = (this.options.exporting || {}).csv || {},
+            dataFormatter = options.dataFormatter || function (val) {
+                return Highcharts.numberFormat(val, -1, useLocalDecimalPoint ? (1.1).toLocaleString()[1] : '.', '');
+            };
 
         // Transform the rows to HTML
         each(rows, function (row, i) {
             var tag = i ? 'td' : 'th',
                 val,
-                j,
-                n = useLocalDecimalPoint ? (1.1).toLocaleString()[1] : '.';
+                j;
 
             html += '<tr>';
             for (j = 0; j < row.length; j = j + 1) {
                 val = row[j];
                 // Add the cell
                 if (typeof val === 'number') {
-                    val = val.toString();
-                    if (n === ',') {
-                        val = val.replace('.', n);
-                    }
+                    val = dataFormatter(val);
                     html += '<' + tag + ' class="number">' + val + '</' + tag + '>';
 
                 } else {
