@@ -3,7 +3,7 @@
  *
  * Author:   Torstein Honsi
  * Licence:  MIT
- * Version:  1.4.4
+ * Version:  1.4.5
  */
 /*global Highcharts, window, document, Blob */
 (function (factory) {
@@ -186,7 +186,7 @@
      * Build a HTML table with the data
      */
     Highcharts.Chart.prototype.getTable = function (useLocalDecimalPoint) {
-        var html = '<table>',
+        var html = '<table><thead>',
             rows = this.getDataRows();
 
         // Transform the rows to HTML
@@ -213,8 +213,16 @@
             }
 
             html += '</tr>';
+
+            // After the first row, end head and start body
+            if (!i) {
+                html += '</thead><tbody>';
+            }
+            
         });
-        html += '</table>';
+        html += '</tbody></table>';
+
+console.log(html);
         return html;
     };
 

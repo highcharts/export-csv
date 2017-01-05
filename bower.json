@@ -1,6 +1,6 @@
 {
   "name": "highcharts-export-csv",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "Highcharts plugin to export the chart data to CSV, XLS or HTML table",
   "keywords": [
     "export",
