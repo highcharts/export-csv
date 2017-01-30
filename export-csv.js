@@ -3,7 +3,7 @@
  *
  * Author:   Torstein Honsi
  * Licence:  MIT
- * Version:  1.4.5
+ * Version:  1.4.6
  */
 /*global Highcharts, window, document, Blob */
 (function (factory) {
@@ -35,7 +35,8 @@
      */
     Highcharts.Chart.prototype.getDataRows = function () {
         var options = (this.options.exporting || {}).csv || {},
-            xAxis = this.xAxis[0],
+            xAxis,
+            xAxes = this.xAxis,
             rows = {},
             rowArr = [],
             dataRows,
@@ -50,8 +51,11 @@
                     return (item.options.title && item.options.title.text) ||
                         (item.isDatetimeAxis ? 'DateTime' : 'Category');
                 }
-                return item.name + (keyLength > 1 ? ' ('+ key + ')' : '');
-            };
+                return item ? 
+                    item.name + (keyLength > 1 ? ' ('+ key + ')' : '') :
+                    'Category';
+            },
+            xAxisIndices = [];
 
         // Loop the series and index values
         i = 0;
@@ -61,7 +65,17 @@
                 valueCount = pointArrayMap.length,
                 requireSorting = series.requireSorting,
                 categoryMap = {},
+                xAxisIndex = Highcharts.inArray(series.xAxis, xAxes),
                 j;
+
+            // Build a lookup for X axis index and the position of the first
+            // series that belongs to that X axis. Includes -1 for non-axis
+            // series types like pies.
+            if (!Highcharts.find(xAxisIndices, function (index) {
+                return index[0] === xAxisIndex;
+            })) {
+                xAxisIndices.push([xAxisIndex, i]);
+            }
 
             // Map the categories for value axes
             each(pointArrayMap, function (prop) {
@@ -69,6 +83,8 @@
             });
 
             if (series.options.includeInCSVExport !== false && series.visible !== false) { // #55
+
+                // Add the column headers, usually the same as series names
                 j = 0;
                 while (j < valueCount) {
                     names.push(columnHeaderFormatter(series, pointArrayMap[j], pointArrayMap.length));
@@ -83,10 +99,14 @@
                     j = 0;
 
                     if (!rows[key]) {
+                        // Generate the row
                         rows[key] = [];
+                        // Contain the X values from one or more X axes
+                        rows[key].xValues = [];
                     }
                     rows[key].x = point.x;
-
+                    rows[key].xValues[xAxisIndex] = point.x;
+                    
                     // Pies, funnels, geo maps etc. use point name in X row
                     if (!series.xAxis || series.exportKey === 'name') {
                         rows[key].name = point.name;
@@ -110,36 +130,52 @@
                 rowArr.push(rows[x]);
             }
         }
-        // Sort it by X values
-        rowArr.sort(function (a, b) {
-            return a.x - b.x;
-        });
 
-        // Add header row
-        xTitle = columnHeaderFormatter(xAxis);
-        dataRows = [[xTitle].concat(names)];
+        var binding, xAxisIndex, column;
+        dataRows = [names];
 
-        // Add the category column
-        each(rowArr, function (row) {
+        i = xAxisIndices.length;
+        while (i--) { // Start from end to splice in
+            xAxisIndex = xAxisIndices[i][0];
+            column = xAxisIndices[i][1];
+            xAxis = xAxes[xAxisIndex];
 
-            var category = row.name;
-            if (!category) {
-                if (xAxis.isDatetimeAxis) {
-                    if (row.x instanceof Date) {
-                        row.x = row.x.getTime();
+            // Sort it by X values
+            rowArr.sort(function (a, b) {
+                return a.xValues[xAxisIndex] - b.xValues[xAxisIndex];
+            });
+
+            // Add header row
+            xTitle = columnHeaderFormatter(xAxis);
+            //dataRows = [[xTitle].concat(names)];
+            dataRows[0].splice(column, 0, xTitle);
+
+            // Add the category column
+            each(rowArr, function (row) {
+
+                var category = row.name;
+                if (!category) {
+                    if (xAxis.isDatetimeAxis) {
+                        if (row.x instanceof Date) {
+                            row.x = row.x.getTime();
+                        }
+                        category = Highcharts.dateFormat(dateFormat, row.x);
+                    } else if (xAxis.categories) {
+                        category = pick(
+                            xAxis.names[row.x],
+                            xAxis.categories[row.x],
+                            row.x
+                        )
+                    } else {
+                        category = row.x;
                     }
-                    category = Highcharts.dateFormat(dateFormat, row.x);
-                } else if (xAxis.categories) {
-                    category = pick(xAxis.names[row.x], xAxis.categories[row.x], row.x)
-                } else {
-                    category = row.x;
                 }
-            }
 
-            // Add the X/date/category
-            row.unshift(category);
-            dataRows.push(row);
-        });
+                // Add the X/date/category
+                row.splice(column, 0, category);
+            });
+        }
+        dataRows = dataRows.concat(rowArr);
 
         return dataRows;
     };
@@ -222,7 +258,6 @@
         });
         html += '</tbody></table>';
 
-console.log(html);
         return html;
     };
 
