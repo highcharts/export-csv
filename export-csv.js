@@ -3,7 +3,7 @@
  *
  * Author:   Torstein Honsi
  * Licence:  MIT
- * Version:  1.4.6
+ * Version:  1.4.7
  */
 /*global Highcharts, window, document, Blob */
 (function (factory) {
@@ -68,21 +68,21 @@
                 xAxisIndex = Highcharts.inArray(series.xAxis, xAxes),
                 j;
 
-            // Build a lookup for X axis index and the position of the first
-            // series that belongs to that X axis. Includes -1 for non-axis
-            // series types like pies.
-            if (!Highcharts.find(xAxisIndices, function (index) {
-                return index[0] === xAxisIndex;
-            })) {
-                xAxisIndices.push([xAxisIndex, i]);
-            }
-
             // Map the categories for value axes
             each(pointArrayMap, function (prop) {
                 categoryMap[prop] = (series[prop + 'Axis'] && series[prop + 'Axis'].categories) || [];
             });
 
             if (series.options.includeInCSVExport !== false && series.visible !== false) { // #55
+
+                // Build a lookup for X axis index and the position of the first
+                // series that belongs to that X axis. Includes -1 for non-axis
+                // series types like pies.
+                if (!Highcharts.find(xAxisIndices, function (index) {
+                    return index[0] === xAxisIndex;
+                })) {
+                    xAxisIndices.push([xAxisIndex, i]);
+                }
 
                 // Add the column headers, usually the same as series names
                 j = 0;
