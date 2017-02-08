@@ -385,5 +385,8 @@
     if (seriesTypes.mapbubble) {
         seriesTypes.mapbubble.prototype.exportKey = 'name';
     }
+    if (seriesTypes.treemap) {
+        seriesTypes.treemap.prototype.exportKey = 'name';
+    }
 
 });
