@@ -24,7 +24,7 @@
     "url": "https://github.com/highcharts/export-csv"
   },
   "peerDependencies": {
-    "highcharts": ">=3.0.0"
+    "highcharts": ">=5.0.6"
   },
   "license": "MIT",
   "bugs": {
