@@ -51,7 +51,7 @@
                     return (item.options.title && item.options.title.text) ||
                         (item.isDatetimeAxis ? 'DateTime' : 'Category');
                 }
-                return item ? 
+                return item ?
                     item.name + (keyLength > 1 ? ' ('+ key + ')' : '') :
                     'Category';
             },
@@ -106,7 +106,7 @@
                     }
                     rows[key].x = point.x;
                     rows[key].xValues[xAxisIndex] = point.x;
-                    
+
                     // Pies, funnels, geo maps etc. use point name in X row
                     if (!series.xAxis || series.exportKey === 'name') {
                         rows[key].name = point.name;
@@ -183,25 +183,25 @@
     /**
      * Get a CSV string
      */
-    Highcharts.Chart.prototype.getCSV = function (useLocalDecimalPoint) {
+    Highcharts.Chart.prototype.getCSV = function () {
         var csv = '',
             rows = this.getDataRows(),
             options = (this.options.exporting || {}).csv || {},
             itemDelimiter = options.itemDelimiter || ',', // use ';' for direct import to Excel
-            lineDelimiter = options.lineDelimiter || '\n'; // '\n' isn't working with the js csv data extraction
+            lineDelimiter = options.lineDelimiter || '\n', // '\n' isn't working with the js csv data extraction
+            decimalPoint = (this.options.lang.decimalPoint || '.');
 
         // Transform the rows to CSV
         each(rows, function (row, i) {
             var val = '',
-                j = row.length,
-                n = useLocalDecimalPoint ? (1.1).toLocaleString()[1] : '.';
+                j = row.length;
             while (j--) {
                 val = row[j];
                 if (typeof val === "string") {
                     val = '"' + val + '"';
                 }
                 if (typeof val === 'number') {
-                    if (n === ',') {
+                    if (decimalPoint === ',') {
                         val = val.toString().replace(".", ",");
                     }
                 }
@@ -221,16 +221,16 @@
     /**
      * Build a HTML table with the data
      */
-    Highcharts.Chart.prototype.getTable = function (useLocalDecimalPoint) {
+    Highcharts.Chart.prototype.getTable = function () {
         var html = '<table><thead>',
-            rows = this.getDataRows();
+            rows = this.getDataRows(),
+            decimalPoint = (this.options.lang.decimalPoint || '.');
 
         // Transform the rows to HTML
         each(rows, function (row, i) {
             var tag = i ? 'td' : 'th',
                 val,
-                j,
-                n = useLocalDecimalPoint ? (1.1).toLocaleString()[1] : '.';
+                j;
 
             html += '<tr>';
             for (j = 0; j < row.length; j = j + 1) {
@@ -238,7 +238,7 @@
                 // Add the cell
                 if (typeof val === 'number') {
                     val = val.toString();
-                    if (n === ',') {
+                    if (decimalPoint === ',') {
                         val = val.replace('.', n);
                     }
                     html += '<' + tag + ' class="number">' + val + '</' + tag + '>';
@@ -254,7 +254,7 @@
             if (!i) {
                 html += '</thead><tbody>';
             }
-            
+
         });
         html += '</tbody></table>';
 
@@ -331,7 +331,7 @@
                 '</head><body>' +
                 this.getTable(true) +
                 '</body></html>',
-            base64 = function (s) { 
+            base64 = function (s) {
                 return window.btoa(unescape(encodeURIComponent(s))); // #50
             };
         getContent(
@@ -350,7 +350,7 @@
         if (!this.dataTableDiv) {
             this.dataTableDiv = document.createElement('div');
             this.dataTableDiv.className = 'highcharts-data-table';
-            
+
             // Insert after the chart container
             this.renderTo.parentNode.insertBefore(
                 this.dataTableDiv,
