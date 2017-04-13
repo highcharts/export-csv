@@ -292,13 +292,15 @@
             a.click();
             a.remove();
 
-        } else {
+        } else if (chart.options.exporting.fallbackToExportServer){
             // Fall back to server side handling
             Highcharts.post(url, {
                 data: content,
                 type: MIME,
                 extension: extension
             });
+        } else {
+            console.log("Error: 'chart.options.exporting.fallbackToExportServer' not enabled.")
         }
     }
 
