@@ -292,7 +292,7 @@
             a.click();
             a.remove();
 
-        } else if (chart.options.exporting.fallbackToExportServer){
+        } else if (chart.options.exporting.fallbackToExportServer !== false){
             // Fall back to server side handling
             Highcharts.post(url, {
                 data: content,
