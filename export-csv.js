@@ -25,7 +25,6 @@
         lang: {
             downloadCSV: 'Download CSV',
             downloadXLS: 'Download XLS',
-            viewData: 'View data table'
         }
     });
 
@@ -343,25 +342,6 @@
         );
     };
 
-    /**
-     * View the data in a table below the chart
-     */
-    Highcharts.Chart.prototype.viewData = function () {
-        if (!this.dataTableDiv) {
-            this.dataTableDiv = document.createElement('div');
-            this.dataTableDiv.className = 'highcharts-data-table';
-            
-            // Insert after the chart container
-            this.renderTo.parentNode.insertBefore(
-                this.dataTableDiv,
-                this.renderTo.nextSibling
-            );
-        }
-
-        this.dataTableDiv.innerHTML = this.getTable();
-    };
-
-
     // Add "Download CSV" to the exporting menu. Use download attribute if supported, else
     // run a simple PHP script that returns a file. The source code for the PHP script can be viewed at
     // https://raw.github.com/highslide-software/highcharts.com/master/studies/csv-export/csv.php
@@ -372,9 +352,6 @@
         }, {
             textKey: 'downloadXLS',
             onclick: function () { this.downloadXLS(); }
-        }, {
-            textKey: 'viewData',
-            onclick: function () { this.viewData(); }
         });
     }
 
