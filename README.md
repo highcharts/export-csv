@@ -5,6 +5,13 @@ This plugin allows the user to export the chart data to various formats and view
 The contents of the plugin is located in the JavaScript file "export-csv.js". 
 This plugin is published under the MIT license, and the license document is included in the repository.
 
+### Deprecation notice
+Given the popularity of this plugin, it has been taken in as a Highcharts module since v5.0.11 (2017-05-04), and
+development will continue in the [official Highcharts repo](https://github.com/highcharts/highcharts/). This
+means it can be loaded from [https://code.highcharts.com/modules/export-data.js](code.highcharts.com) and 
+is available with the [https://www.npmjs.com/package/highcharts](Highcharts npm package). Issues should now
+be reported in the Highcharts repo.
+
 ### Demos
 * [Categorized chart](http://jsfiddle.net/highcharts/cqjvD/)
 * [View data table from menu](http://jsfiddle.net/highcharts/j4w4s0mw/)
