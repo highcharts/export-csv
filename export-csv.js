@@ -286,7 +286,6 @@
         } else if (downloadAttrSupported) {
             a = document.createElement('a');
             a.href = href;
-            a.target = '_blank';
             a.download = name + '.' + extension;
             chart.container.append(a); // #111
             a.click();
