@@ -23,7 +23,7 @@ Formatter callback for the column headers. Parameters are `item` (the series or 
 Which date format to use for exported dates on a datetime X axis. See [Highcharts.dateFormat](http://api.highcharts.com/highcharts#Highcharts.dateFormat\(\)).
 
 * `exporting.csv.itemDelimiter`
-The item delimiter, defaults to `,`. Use `;` for direct import to Excel.
+The item delimiter, defaults to `;`. Use `;` for direct import to Excel.
 
 * `exporting.csv.lineDelimiter`
 The line delimiter, defaults to `\\n`.
