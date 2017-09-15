@@ -60,6 +60,10 @@
         // Loop the series and index values
         i = 0;
         each(this.series, function (series) {
+            // ignore Navigator series
+            if(series.name.indexOf('Navigator') !== -1) {
+                return;
+            }
             var keys = series.options.keys,
                 pointArrayMap = keys || series.pointArrayMap || ['y'],
                 valueCount = pointArrayMap.length,
