@@ -55,7 +55,13 @@
                     item.name + (keyLength > 1 ? ' ('+ key + ')' : '') :
                     'Category';
             },
-            xAxisIndices = [];
+            xAxisIndices = [],
+            rowCategoryFormatter =  options.rowCategoryFormatter || function (point, series) {
+                return null;
+            },
+            rowValueFormatter =  options.rowValueFormatter || function (point, series) {
+                return null;
+            };
 
         // Loop the series and index values
         i = 0;
@@ -94,7 +100,8 @@
                 each(series.points, function (point, pIdx) {
                     var key = requireSorting ? point.x : pIdx,
                         prop,
-                        val;
+                        val,
+                        categoryName = rowCategoryFormatter(point, series);
 
                     j = 0;
 
@@ -112,10 +119,15 @@
                         rows[key].name = point.name;
                     }
 
+                    // If rowCategoryFormatter provides override.
+                    if (categoryName) {
+                        rows[key].name = categoryName;
+                    }
+
                     while (j < valueCount) {
                         prop = pointArrayMap[j]; // y, z etc
                         val = point[prop];
-                        rows[key][i + j] = pick(categoryMap[prop][val], val); // Pick a Y axis category if present
+                        rows[key][i + j] = pick(rowValueFormatter(point, series), categoryMap[prop][val], val); // Pick a Y axis category if present
                         j = j + 1;
                     }
 
